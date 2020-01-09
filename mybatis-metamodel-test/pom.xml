@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>com.github.thinwonton.mybatismetamodel</groupId>
+        <artifactId>mybatis-metamodel</artifactId>
+        <version>0.1.0</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>mybatis-metamodel-test</artifactId>
+    <packaging>pom</packaging>
+
+    <properties>
+        <jpa.version>1.0</jpa.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <mybatis.version>3.5.3</mybatis.version>
+        <junit.version>4.12</junit.version>
+        <log4j.version>1.2.17</log4j.version>
+        <hsqldb.version>2.2.9</hsqldb.version>
+        <mysql.version>5.1.45</mysql.version>
+
+        <tkmapper-module.version>1.1.5</tkmapper-module.version>
+    </properties>
+
+    <modules>
+        <module>tkmapper-test</module>
+        <module>mybatis-plus-test</module>
+    </modules>
+</project>
