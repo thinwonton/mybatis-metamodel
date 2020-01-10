@@ -6,6 +6,7 @@ import com.github.thinwonton.mybatis.metamodel.core.gen.PersistentAttribute;
 import com.github.thinwonton.mybatis.metamodel.core.gen.PersistentAttributeImpl;
 import com.github.thinwonton.mybatis.metamodel.core.util.ClassWriterUtils;
 import com.github.thinwonton.mybatis.metamodel.core.util.ReflectionUtils;
+import com.github.thinwonton.mybatis.metamodel.core.util.StringUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 
@@ -34,6 +35,10 @@ public class MetaModelContext {
 
                 //mappedStatement映射的实体类
                 Class<?> entityClass = entityResolver.getMappedEntityClass(mappedStatement);
+                if (entityClass == null) {
+                    //TODO 打印日志，如果不通过 mybatis-plus 或者 tk-mapper注册 mappedStatements，有可能不存在
+                    continue;
+                }
 
                 //创建table
                 String tableName = entityResolver.resolveTableName(entityClass);
