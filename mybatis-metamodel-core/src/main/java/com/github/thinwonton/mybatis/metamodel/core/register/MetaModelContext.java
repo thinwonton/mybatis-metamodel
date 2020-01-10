@@ -42,6 +42,9 @@ public class MetaModelContext {
 
                 //创建table
                 String tableName = entityResolver.resolveTableName(entityClass);
+                if (StringUtils.isEmpty(tableName)) {
+                    throw new MetaModelRegisterException("Resolved table name should not be empty, entity class is " + entityClass.getName());
+                }
                 Table table = new Table(entityClass, tableName);
                 table.setTableName(tableName);
 
