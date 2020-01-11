@@ -58,6 +58,7 @@ public class DefaultMetaEntity implements MetaEntity {
     private void addPersistentMembers(List<? extends Element> membersOfClass, AccessType accessType) {
         for (Element memberOfClass : membersOfClass) {
             if (metaAttributeConverter.canConvert(memberOfClass, accessType)) {
+                metaModelGenContext.logMessage(Diagnostic.Kind.OTHER, "Starting convert " + this.element.toString() + " member: " + memberOfClass.getSimpleName());
                 //类型转换
                 MetaAttributeGenerationVisitor visitor = new MetaAttributeGenerationVisitor(metaModelGenContext, this, metaAttributeConverter);
                 MetaAttributeDescriptor result = memberOfClass.asType().accept(visitor, memberOfClass);
@@ -88,7 +89,7 @@ public class DefaultMetaEntity implements MetaEntity {
     }
 
     public final String getPackageName() {
-        return   GenerateUtils.getPackageName(metaModelGenContext,element);
+        return GenerateUtils.getPackageName(metaModelGenContext, element);
     }
 
     public final String getQualifiedName() {

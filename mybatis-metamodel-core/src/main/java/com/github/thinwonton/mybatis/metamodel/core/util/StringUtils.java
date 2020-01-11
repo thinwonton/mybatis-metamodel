@@ -1,6 +1,8 @@
 package com.github.thinwonton.mybatis.metamodel.core.util;
 
 public class StringUtils {
+    public static final String DOT = ".";
+
     public static boolean isEmpty(String str) {
         return str == null || str.length() == 0;
     }

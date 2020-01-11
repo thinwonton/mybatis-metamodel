@@ -133,4 +133,31 @@ public class MetaModelContext {
         return null;
     }
 
+    public Table getTable(Class<?> metaModelClass) {
+        return this.tableMapping.get(metaModelClass);
+    }
+
+    /**
+     * 获取不带schema的表名
+     *
+     * @param metaModelClass
+     */
+    public String getTableName(Class<?> metaModelClass) {
+        Table table = getTable(metaModelClass);
+        return table.getTableName();
+    }
+
+    /**
+     * 获取带schema的表名
+     * @param metaModelClass
+     * @return
+     */
+    public String getComplicatedTableName(Class<?> metaModelClass) {
+        Table table = getTable(metaModelClass);
+        if (StringUtils.isNotEmpty(table.getSchema())) {
+            return table.getSchema() + StringUtils.DOT + table.getTableName();
+        } else {
+            return table.getTableName();
+        }
+    }
 }

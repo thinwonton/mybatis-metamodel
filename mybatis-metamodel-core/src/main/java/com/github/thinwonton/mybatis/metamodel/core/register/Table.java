@@ -4,19 +4,22 @@ import java.util.Collection;
 import java.util.HashSet;
 
 /**
- * TableDescriptor
+ * Table
  */
 public class Table {
 
     // 对应的实体名
     private Class<?> entityClass;
 
+    // 数据库的schema
+    private String schema;
+
     // 表名
     private String tableName;
 
     private Collection<TableField> tableFields = new HashSet<>();
 
-    public Table(Class<?> entityClass,String tableName) {
+    public Table(Class<?> entityClass, String tableName) {
         this.entityClass = entityClass;
         this.tableName = tableName;
     }
@@ -27,6 +30,14 @@ public class Table {
 
     public void setEntityClass(Class<?> entityClass) {
         this.entityClass = entityClass;
+    }
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public void setSchema(String schema) {
+        this.schema = schema;
     }
 
     public String getTableName() {
@@ -46,4 +57,5 @@ public class Table {
     public Collection<TableField> getTableFields() {
         return tableFields;
     }
+
 }

@@ -3,6 +3,7 @@ CREATE table music
 (
     id          BIGINT(20)   NOT NULL AUTO_INCREMENT,
     name        varchar(100) NOT NULL,
+    authorName varchar(100),
     create_date DATETIME,
     update_date DATETIME,
     PRIMARY KEY (id)

@@ -21,6 +21,9 @@
         <hsqldb.version>2.2.9</hsqldb.version>
         <mysql.version>5.1.45</mysql.version>
 
+        <mockito.version>2.28.2</mockito.version>
+        <powermock.version>2.0.4</powermock.version>
+
         <tkmapper-module.version>1.1.5</tkmapper-module.version>
     </properties>
 
@@ -28,4 +31,28 @@
         <module>tkmapper-test</module>
         <module>mybatis-plus-test</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>2.28.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito2</artifactId>
+                <version>2.0.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>2.0.4</version>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
 </project>

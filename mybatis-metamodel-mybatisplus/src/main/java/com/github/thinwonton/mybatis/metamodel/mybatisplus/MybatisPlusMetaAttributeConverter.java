@@ -5,17 +5,10 @@ import com.github.thinwonton.mybatis.metamodel.core.gen.*;
 import com.github.thinwonton.mybatis.metamodel.core.util.AccessType;
 import com.github.thinwonton.mybatis.metamodel.core.util.GenerateUtils;
 
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.PrimitiveType;
-import java.lang.reflect.Modifier;
 
-/**
- * TKMapper
- */
 public class MybatisPlusMetaAttributeConverter implements MetaAttributeConverter {
 
     @Override
@@ -26,15 +19,17 @@ public class MybatisPlusMetaAttributeConverter implements MetaAttributeConverter
         }
 
         //获取TableField注解
-        boolean markedTableField = true;
+        boolean isTableField = true;
         AnnotationMirror annotationMirror = GenerateUtils.getAnnotationMirror(memberOfClass, TableField.class.getCanonicalName());
         if (annotationMirror != null) {
-            markedTableField = (boolean) GenerateUtils.getAnnotationValue(annotationMirror, "exist");
+            Object existObject = GenerateUtils.getAnnotationValue(annotationMirror, "exist");
+            if (existObject != null) {
+                isTableField = (boolean) existObject;
+            }
         }
-
         return !memberOfClass.getModifiers().contains(Modifier.TRANSIENT) //不是transient修饰的成员
                 && !memberOfClass.getModifiers().contains(Modifier.STATIC) //不是static修饰的成员
-                && markedTableField;
+                && isTableField;
     }
 
     @Override

@@ -75,6 +75,7 @@ public final class GenerateUtils {
 
     /**
      * 获取注解中parameterKey的值
+     *
      * @param annotationMirror
      * @param parameterKey
      * @return
@@ -84,8 +85,8 @@ public final class GenerateUtils {
         assert parameterKey != null;
 
         Object returnValue = null;
-        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues()
-                .entrySet()) {
+        Set<? extends Map.Entry<? extends ExecutableElement, ? extends AnnotationValue>> entries = annotationMirror.getElementValues().entrySet();
+        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : entries) {
             if (parameterKey.equals(entry.getKey().getSimpleName().toString())) {
                 returnValue = entry.getValue().getValue();
                 break;
