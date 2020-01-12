@@ -19,6 +19,8 @@ import java.util.Set;
  *
  */
 public abstract class AbstractMetaModelGenProcessor extends AbstractProcessor {
+    //打印processor日志的开关
+    public static final String DEBUG_OPTION = "debug";
 
     private static final Boolean ALLOW_OTHER_PROCESSORS_TO_CLAIM_ANNOTATIONS = false;
 

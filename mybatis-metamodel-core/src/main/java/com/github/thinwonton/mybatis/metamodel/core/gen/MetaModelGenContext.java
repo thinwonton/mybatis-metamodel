@@ -16,6 +16,8 @@ public final class MetaModelGenContext {
 
     private final Processor metaModelProducer;
 
+    private boolean logDebug;
+
     /**
      * 已经解析的orm entity
      */
@@ -26,9 +28,17 @@ public final class MetaModelGenContext {
     public MetaModelGenContext(ProcessingEnvironment processingEnvironment, Processor metaModelProducer) {
         this.processingEnvironment = processingEnvironment;
         this.metaModelProducer = metaModelProducer;
+        config();
+    }
+
+    private void config() {
+        logDebug = Boolean.parseBoolean(processingEnvironment.getOptions().get(AbstractMetaModelGenProcessor.DEBUG_OPTION));
     }
 
     public void logMessage(Diagnostic.Kind type, String message) {
+        if (!logDebug && type.equals(Diagnostic.Kind.OTHER)) {
+            return;
+        }
         this.processingEnvironment.getMessager().printMessage(type, message);
     }
 
