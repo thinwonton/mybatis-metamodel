@@ -72,9 +72,9 @@ public class TKMapperEntityResolver implements EntityResolver {
         List<TableField> tableFields = new ArrayList<>();
         Field[] declaredFields = entityClass.getDeclaredFields();
         for (Field field : declaredFields) {
-            TableField cd = resolveTableField(table, entityClass, field);
-            if (cd != null) {
-                tableFields.add(cd);
+            TableField tableField = resolveTableField(table, entityClass, field);
+            if (tableField != null) {
+                tableFields.add(tableField);
             }
         }
         return tableFields;
@@ -126,12 +126,12 @@ public class TKMapperEntityResolver implements EntityResolver {
         tableField.setJavaType(field.getType());
 
         // jdbcType
+        JdbcType jdbcType = JdbcType.UNDEFINED;
         if (field.isAnnotationPresent(ColumnType.class)) {
             ColumnType columnType = field.getAnnotation(ColumnType.class);
-            if (columnType.jdbcType() != JdbcType.UNDEFINED) {
-                tableField.setJdbcType(columnType.jdbcType());
-            }
+            jdbcType = columnType.jdbcType();
         }
+        tableField.setJdbcType(jdbcType);
 
         return tableField;
     }
