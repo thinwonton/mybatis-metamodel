@@ -93,10 +93,23 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
                 <version>3.3.3</version>
+                <configuration>
+                    <processors>
+                        <processor>
+                            com.github.thinwonton.mybatis.metamodel.tkmapper.TKMapperMetaModelGenProcessor
+                        </processor>
+                    </processors>
+                    <!-- source output directory -->
+                    <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
+                    <options>
+                        <debug>true</debug>
+                    </options>
+                </configuration>
                 <executions>
                     <execution>
                         <id>process</id>
@@ -105,36 +118,26 @@
                         </goals>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <compilerArguments>-Adebug=true</compilerArguments>
-                            <processors>
-                                <processor>com.github.thinwonton.mybatis.metamodel.tkmapper.TKMapperMetaModelGenProcessor</processor>
-                            </processors>
-                            <!-- source output directory -->
-                            <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
+                            <outputDirectory>
+                                ${project.build.directory}/generated-sources/annotations
+                            </outputDirectory>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>
-            <!--生成的源码添加到classpath-->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
                     <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
+                        <id>process-test</id>
                         <goals>
-                            <goal>add-source</goal>
+                            <goal>process-test</goal>
                         </goals>
+                        <phase>generate-test-sources</phase>
                         <configuration>
-                            <sources>
-                                <source>${project.build.directory}/generated-sources/annotations</source>
-                            </sources>
+                            <outputDirectory>
+                                ${project.build.directory}/generated-test-sources/annotations
+                            </outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 </project>

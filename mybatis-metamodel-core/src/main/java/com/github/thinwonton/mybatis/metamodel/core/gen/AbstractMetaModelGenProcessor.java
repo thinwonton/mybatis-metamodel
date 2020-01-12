@@ -29,15 +29,20 @@ public abstract class AbstractMetaModelGenProcessor extends AbstractProcessor {
     //meta model的writer
     private ClassWriter classWriter;
 
+    private boolean initialized = false;
+
     public abstract ElementResolver getElementResolver(MetaModelGenContext metaModelGenContext, TypeElement element);
 
     public abstract ClassWriter getClassWriter(MetaModelGenContext metaModelGenContext);
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
-        super.init(processingEnv);
-        this.metaModelGenContext = new MetaModelGenContext(processingEnv, this);
-        this.classWriter = getClassWriter(metaModelGenContext);
+        if (!isInitialized()) {
+            super.init(processingEnv);
+
+            this.metaModelGenContext = new MetaModelGenContext(processingEnv, this);
+            this.classWriter = getClassWriter(metaModelGenContext);
+        }
     }
 
     @Override
@@ -82,20 +87,17 @@ public abstract class AbstractMetaModelGenProcessor extends AbstractProcessor {
 
     /**
      * 获取注解标识的类及其父类
-     *
-     * @param rootElement
-     * @return
      */
     private Set<TypeElement> resolveElements(Element rootElement) {
         Set<TypeElement> result = new HashSet<>();
         //orm entity标注了@GenMetaModel才处理
         if (markedSupportedAnnotation(rootElement)) {
-            TypeElement childrenElement = null;
+            TypeElement childrenElement;
             childrenElement = (TypeElement) rootElement;
             result.add(childrenElement);
 
             //遍历获取父类的element
-            TypeElement superclassTypeElement = null;
+            TypeElement superclassTypeElement;
             while ((superclassTypeElement = GenerateUtils.getSuperclassTypeElement(childrenElement)) != null) {
                 result.add(superclassTypeElement);
                 childrenElement = superclassTypeElement;
