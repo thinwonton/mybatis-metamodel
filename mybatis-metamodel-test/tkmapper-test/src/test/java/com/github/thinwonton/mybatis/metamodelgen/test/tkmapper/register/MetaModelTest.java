@@ -6,6 +6,7 @@ import com.github.thinwonton.mybatis.metamodel.tkmapper.TKMapperEntityResolver;
 import com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.TKMapperTestBase;
 import com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.entity.Music_;
 import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.JdbcType;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -46,17 +47,20 @@ public class MetaModelTest extends TKMapperTestBase {
         Assert.assertTrue(Music_.id.isId());
         Assert.assertEquals(Long.class, Music_.id.getJavaType());
         Assert.assertEquals("id", Music_.id.getProperty());
+        Assert.assertEquals(JdbcType.UNDEFINED, Music_.id.getJdbcType());
 
         //name
         Assert.assertEquals("name", Music_.name.getColumn());
         Assert.assertFalse(Music_.name.isId());
         Assert.assertEquals(String.class, Music_.name.getJavaType());
         Assert.assertEquals("name", Music_.name.getProperty());
+        Assert.assertEquals(JdbcType.UNDEFINED, Music_.name.getJdbcType());
 
         //authorName
         Assert.assertEquals("authorName", Music_.authorName.getColumn());
         Assert.assertFalse(Music_.authorName.isId());
         Assert.assertEquals(String.class, Music_.authorName.getJavaType());
         Assert.assertEquals("authorName", Music_.authorName.getProperty());
+        Assert.assertEquals(JdbcType.VARCHAR, Music_.authorName.getJdbcType());
     }
 }

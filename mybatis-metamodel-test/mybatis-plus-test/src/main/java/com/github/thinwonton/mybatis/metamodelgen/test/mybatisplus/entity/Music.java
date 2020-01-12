@@ -7,10 +7,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.thinwonton.mybatis.metamodel.core.annotation.GenMetaModel;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.type.JdbcType;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.Date;
 
 @GenMetaModel
 @TableName("music")
@@ -26,7 +25,7 @@ public class Music extends Entity implements Serializable {
     private Long id;
     private String name;
 
-    @TableField(value = "authorName")
+    @TableField(value = "authorName", jdbcType = JdbcType.VARCHAR)
     private String authorName;
 
     public Long getId() {
