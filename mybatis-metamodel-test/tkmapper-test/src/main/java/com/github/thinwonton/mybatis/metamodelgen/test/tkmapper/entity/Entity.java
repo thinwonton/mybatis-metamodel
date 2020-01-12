@@ -2,10 +2,7 @@ package com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.entity;
 
 import java.util.Date;
 
-/**
- * ORMEntity
- */
-public abstract class ORMEntity {
+public abstract class Entity {
     private Date createDate;
     private Date updateDate;
 

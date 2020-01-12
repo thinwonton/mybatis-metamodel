@@ -15,96 +15,69 @@ import tk.mybatis.mapper.mapperhelper.MapperHelper;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URL;
 import java.sql.Connection;
 
 public class TKMapperTestBase {
     private SqlSessionFactory sqlSessionFactory;
 
-    private static final String MYBATIS_CONFIG_FILE = "mybatis-java.xml";
-
-    private static final String DB_INIT_FILE_NAME = "CreateDB.sql";
-
     @Before
-    public void setup() throws IOException {
-        //创建SqlSessionFactory
-        Reader reader = Resources.getResourceAsReader(getMybatisConfigFile());
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        reader.close();
+    public void setup() {
+        try {
+            Reader reader = getConfigFileAsReader();
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+            reader.close();
+            //配置通用 Mapper
+            configMapperHelper();
+            //执行初始化 SQL
+            runSql(getSqlFileAsReader());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        initMybatis();
-
-        //创建数据库
-        createDb(getDBInitFile());
     }
 
-    protected void initMybatis() {
+    /**
+     * 配置通用 Mapper
+     */
+    protected void configMapperHelper() {
         //创建一个MapperHelper
         MapperHelper mapperHelper = new MapperHelper();
-        //特殊配置
-        Config config = new Config();
-        // 设置UUID生成策略
-        // 配置UUID生成策略需要使用OGNL表达式
-        // 默认值32位长度:@java.util.UUID@randomUUID().toString().replace("-", "")
-        //config.setUUID("");
-        // 主键自增回写方法,默认值MYSQL,详细说明请看文档
-        config.setIDENTITY("HSQLDB");
-        // 支持方法上的注解
-        // 3.3.1版本增加
-        config.setEnableMethodAnnotation(true);
-        config.setNotEmpty(true);
-        //校验Example中的类型是否一致
-        config.setCheckExampleEntityClass(true);
-        //启用简单类型
-        config.setUseSimpleType(true);
-        // 序列的获取规则,使用{num}格式化参数，默认值为{0}.nextval，针对Oracle
-        // 可选参数一共3个，对应0,1,2,分别为SequenceName，ColumnName, PropertyName
-        //config.setSeqFormat("NEXT VALUE FOR {0}");
-        // 设置全局的catalog,默认为空，如果设置了值，操作表时的sql会是catalog.tablename
-        //config.setCatalog("");
-        // 设置全局的schema,默认为空，如果设置了值，操作表时的sql会是schema.tablename
-        // 如果同时设置了catalog,优先使用catalog.tablename
-        //config.setSchema("");
-        // 主键自增回写方法执行顺序,默认AFTER,可选值为(BEFORE|AFTER)
-        //config.setOrder("AFTER");
         //设置配置
-        mapperHelper.setConfig(config);
-        // 注册通用Mapper接口 - 可以自动注册继承的接口
-        mapperHelper.registerMapper(Mapper.class);
-        mapperHelper.registerMapper(MySqlMapper.class);
-        mapperHelper.registerMapper(SqlServerMapper.class);
-        mapperHelper.registerMapper(IdsMapper.class);
+        mapperHelper.setConfig(getConfig());
         //配置完成后，执行下面的操作
-        mapperHelper.processConfiguration(sqlSessionFactory.getConfiguration());
+        mapperHelper.processConfiguration(getSqlSessionFactory().getConfiguration());
     }
 
-    protected String getMybatisConfigFile() {
-        return MYBATIS_CONFIG_FILE;
+    /**
+     * 获取 Mapper 配置
+     *
+     * @return
+     */
+    protected Config getConfig() {
+        return new Config();
     }
 
-    protected String getDBInitFile() {
-        return DB_INIT_FILE_NAME;
+
+    /**
+     * 获取 mybatis 配置
+     *
+     * @return
+     */
+    protected Reader getConfigFileAsReader() throws IOException {
+        return Resources.getResourceAsReader("mybatis-config.xml");
     }
 
-    public void createDb(String fileName) throws IOException {
-        Reader reader = Resources.getResourceAsReader(fileName);
-        runScript(reader);
+    /**
+     * 获取初始化 sql
+     *
+     * @return
+     */
+    protected Reader getSqlFileAsReader() throws IOException {
+        return Resources.getResourceAsReader("db.sql");
     }
 
-    public void runScript(Reader reader) {
-        SqlSession session = getSqlSession();
-        try {
-            Connection conn = session.getConnection();
-            ScriptRunner runner = new ScriptRunner(conn);
-            runner.setLogWriter(null);
-            runner.runScript(reader);
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
-    }
-
-    public SqlSessionFactory getSqlSessionFactory() {
+    protected SqlSessionFactory getSqlSessionFactory() {
         return sqlSessionFactory;
     }
 
@@ -113,8 +86,33 @@ public class TKMapperTestBase {
      *
      * @return
      */
-    public SqlSession getSqlSession() {
+    protected SqlSession getSqlSession() {
         return sqlSessionFactory.openSession();
+    }
+
+    /**
+     * 执行 Sql
+     *
+     * @param reader
+     */
+    protected void runSql(Reader reader) {
+        if (reader == null) {
+            return;
+        }
+        SqlSession sqlSession = getSqlSession();
+        try {
+            Connection conn = sqlSession.getConnection();
+            ScriptRunner runner = new ScriptRunner(conn);
+            runner.setLogWriter(null);
+            runner.runScript(reader);
+            try {
+                reader.close();
+            } catch (IOException e) {
+                //ignore
+            }
+        } finally {
+            sqlSession.close();
+        }
     }
 
 }

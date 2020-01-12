@@ -29,12 +29,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <version>${hsqldb.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>tk.mybatis</groupId>
             <artifactId>mapper-core</artifactId>
             <version>${tkmapper-module.version}</version>
@@ -59,6 +53,20 @@
         </dependency>
 
         <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.200</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.20</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>${log4j.version}</version>
@@ -71,6 +79,25 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -88,9 +115,9 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <!--<compilerArguments>-AaddGeneratedAnnotation=false</compilerArguments>-->
-                            <!--<processors>
+                            <processors>
                                 <processor>com.github.thinwonton.mybatis.metamodel.tkmapper.TKMapperMetaModelGenProcessor</processor>
-                            </processors>-->
+                            </processors>
                             <!-- source output directory -->
                             <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
                         </configuration>
