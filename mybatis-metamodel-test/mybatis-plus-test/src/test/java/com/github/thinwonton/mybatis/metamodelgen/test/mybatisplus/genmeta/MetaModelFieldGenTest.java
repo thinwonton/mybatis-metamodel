@@ -20,7 +20,7 @@ public class MetaModelFieldGenTest {
     @Test
     public void testNotGenTransientField() {
         List<String> expectedFields = Arrays.asList(
-                "name", "id"
+                "name", "id", "authorName"
         );
 
         List<String> notExpectedFields = Arrays.asList(
@@ -32,7 +32,7 @@ public class MetaModelFieldGenTest {
             Assert.assertTrue(expectedFields.contains(declaredField.getName()));
             Assert.assertFalse(notExpectedFields.contains(declaredField.getName()));
         }
-        Assert.assertEquals(2, declaredFields.length);
+        Assert.assertEquals(expectedFields.size(), declaredFields.length);
     }
 
     /**
@@ -54,6 +54,6 @@ public class MetaModelFieldGenTest {
         for (Field declaredField : declaredFields) {
             Assert.assertTrue(expectedFields.contains(declaredField.getName()));
         }
-        Assert.assertEquals(2, declaredFields.length);
+        Assert.assertEquals(expectedFields.size(), declaredFields.length);
     }
 }
