@@ -1,35 +1,48 @@
 package com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.register;
 
-import com.baomidou.mybatisplus.core.MybatisSqlSessionFactoryBuilder;
+import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
+import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.MetaModelContext;
+import com.github.thinwonton.mybatis.metamodel.core.register.Table;
+import com.github.thinwonton.mybatis.metamodel.core.util.StringUtils;
 import com.github.thinwonton.mybatis.metamodel.mybatisplus.MybatisPlusEntityResolver;
+import com.github.thinwonton.mybatis.metamodel.mybatisplus.MybatisPlusGlobalConfigFactory;
+import com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.MybatisPlusTestBase;
 import com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.entity.Music_;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.SqlSessionFactory;
+import com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.entity.SpecSchemaSport;
+import com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.entity.SpecSchemaSport_;
 import org.apache.ibatis.type.JdbcType;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.Reader;
 
 /**
  * 测试生成的 MetaModel
  */
-public class MetaModelTest {
+public class MetaModelTest extends MybatisPlusTestBase {
 
     private MetaModelContext metaModelContext;
 
-    @Before
+    private String GLOBAL_SCHEMA_NAME = "global_schema";
+
+    @Override
+    protected void configMybatisConfiguration(MybatisConfiguration mybatisConfiguration) {
+        com.baomidou.mybatisplus.core.config.GlobalConfig globalConfig = mybatisConfiguration.getGlobalConfig();
+        com.baomidou.mybatisplus.core.config.GlobalConfig.DbConfig dbConfig = new com.baomidou.mybatisplus.core.config.GlobalConfig.DbConfig();
+        globalConfig.setDbConfig(dbConfig);
+        dbConfig.setSchema(GLOBAL_SCHEMA_NAME);
+    }
+
+    @Override
     public void setup() throws IOException {
-        Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
-        SqlSessionFactory factory = new MybatisSqlSessionFactoryBuilder().build(reader);
-        Configuration configuration = factory.getConfiguration();
+        super.setup();
+        MybatisConfiguration configuration = (MybatisConfiguration) getSqlSessionFactory().getConfiguration();
         EntityResolver entityResolver = new MybatisPlusEntityResolver();
-        metaModelContext = new MetaModelContext(configuration, entityResolver);
+        metaModelContext = new MetaModelContext(
+                new MybatisPlusGlobalConfigFactory(configuration),
+                entityResolver);
     }
 
     /**
@@ -37,10 +50,19 @@ public class MetaModelTest {
      */
     @Test
     public void testTableName() {
-        String simpleTableName = metaModelContext.getTableName(Music_.class);
-        Assert.assertEquals("music", simpleTableName);
-        String complicatedTableName = metaModelContext.getComplicatedTableName(Music_.class);
-        Assert.assertEquals("music", complicatedTableName);
+        String expectedSimpleTableName = "music";
+        String expectedTableName = Table.makeTableName(GLOBAL_SCHEMA_NAME, expectedSimpleTableName);
+        String simpleTableName = metaModelContext.getSimpleTableName(Music_.class);
+        Assert.assertEquals(expectedSimpleTableName, simpleTableName);
+        String complicatedTableName = metaModelContext.getTableName(Music_.class);
+        Assert.assertEquals(expectedTableName, complicatedTableName);
+
+        String expectedSimpleTableName2 = "SpecSchemaSport";
+        String expectedTableName2 = Table.makeTableName(SpecSchemaSport.SCHEMA, expectedSimpleTableName2);
+        String simpleTableName2 = metaModelContext.getSimpleTableName(SpecSchemaSport_.class);
+        Assert.assertEquals(expectedSimpleTableName2, simpleTableName2);
+        String complicatedTableName2 = metaModelContext.getTableName(SpecSchemaSport_.class);
+        Assert.assertEquals(expectedTableName2, complicatedTableName2);
     }
 
     /**
@@ -68,5 +90,30 @@ public class MetaModelTest {
         Assert.assertEquals(String.class, Music_.authorName.getJavaType());
         Assert.assertEquals("authorName", Music_.authorName.getProperty());
         Assert.assertEquals(JdbcType.VARCHAR, Music_.authorName.getJdbcType());
+    }
+
+    @Test
+    public void testCatalogAndSchema() {
+        Assert.assertNotNull(metaModelContext);
+        GlobalConfig globalConfig = metaModelContext.getGlobalConfig();
+        Assert.assertNotNull(globalConfig);
+
+        Assert.assertEquals(GLOBAL_SCHEMA_NAME, globalConfig.getSchema());
+
+        Table musicTable = metaModelContext.getTable(Music_.class);
+        Assert.assertNotNull(musicTable);
+        Assert.assertNotNull(musicTable.getCatalogSchemaInfo());
+        Assert.assertTrue(StringUtils.isEmpty(musicTable.getCatalogSchemaInfo().getGlobalCatalog()));
+        Assert.assertEquals(GLOBAL_SCHEMA_NAME, musicTable.getCatalogSchemaInfo().getGlobalSchema());
+        Assert.assertTrue(StringUtils.isEmpty(musicTable.getCatalogSchemaInfo().getCatalog()));
+        Assert.assertTrue(StringUtils.isEmpty(musicTable.getCatalogSchemaInfo().getSchema()));
+
+        Table specSchemaSportTable = metaModelContext.getTable(SpecSchemaSport_.class);
+        Assert.assertNotNull(specSchemaSportTable);
+        Assert.assertNotNull(specSchemaSportTable.getCatalogSchemaInfo());
+        Assert.assertEquals(GLOBAL_SCHEMA_NAME, specSchemaSportTable.getCatalogSchemaInfo().getGlobalSchema());
+        Assert.assertEquals(SpecSchemaSport.SCHEMA, specSchemaSportTable.getCatalogSchemaInfo().getSchema());
+        Assert.assertTrue(StringUtils.isEmpty(specSchemaSportTable.getCatalogSchemaInfo().getCatalog()));
+
     }
 }

@@ -1,8 +1,9 @@
 package com.github.thinwonton.mybatis.metamodel.tkmapper;
 
-import com.github.thinwonton.mybatis.metamodel.core.register.TableField;
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
+import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.Table;
+import com.github.thinwonton.mybatis.metamodel.core.register.TableField;
 import com.github.thinwonton.mybatis.metamodel.core.util.RegisterUtils;
 import com.github.thinwonton.mybatis.metamodel.core.util.StringUtils;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -50,7 +51,7 @@ public class TKMapperEntityResolver implements EntityResolver {
     }
 
     @Override
-    public String resolveTableName(Class<?> entityClass) {
+    public String resolveSimpleTableName(GlobalConfig globalConfig, Class<?> entityClass) {
         String tableName = null;
         if (entityClass.isAnnotationPresent(javax.persistence.Table.class)) {
             javax.persistence.Table tableAnnotation = entityClass.getAnnotation(javax.persistence.Table.class);
@@ -67,7 +68,7 @@ public class TKMapperEntityResolver implements EntityResolver {
     }
 
     @Override
-    public Collection<TableField> resolveTableFields(Table table, Class<?> entityClass) {
+    public Collection<TableField> resolveTableFields(GlobalConfig globalConfig, Table table, Class<?> entityClass) {
         //TODO 处理getter setter里面的属性
         List<TableField> tableFields = new ArrayList<>();
         Field[] declaredFields = entityClass.getDeclaredFields();
@@ -78,6 +79,23 @@ public class TKMapperEntityResolver implements EntityResolver {
             }
         }
         return tableFields;
+    }
+
+    @Override
+    public Table.CatalogSchemaInfo resolveTableCatalogSchemaInfo(GlobalConfig globalConfig, Class<?> entityClass) {
+        Table.CatalogSchemaInfo catalogSchemaInfo = new Table.CatalogSchemaInfo();
+
+        if (entityClass.isAnnotationPresent(javax.persistence.Table.class)) {
+            javax.persistence.Table tableAnnotation = entityClass.getAnnotation(javax.persistence.Table.class);
+            if (StringUtils.isNotEmpty(tableAnnotation.catalog()) || StringUtils.isNotEmpty(tableAnnotation.schema())) {
+                catalogSchemaInfo.setCatalog(tableAnnotation.catalog());
+                catalogSchemaInfo.setSchema(tableAnnotation.schema());
+            }
+        }
+
+        catalogSchemaInfo.setGlobalCatalog(globalConfig.getCatalog());
+        catalogSchemaInfo.setGlobalSchema(globalConfig.getSchema());
+        return catalogSchemaInfo;
     }
 
     private TableField resolveTableField(Table table, Class<?> entityClass, Field field) {

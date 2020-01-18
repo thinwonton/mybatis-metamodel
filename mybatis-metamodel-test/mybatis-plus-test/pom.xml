@@ -95,9 +95,9 @@
                     </processors>
                     <!-- source output directory -->
                     <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
-                    <options>
+                   <!-- <options>
                         <debug>true</debug>
-                    </options>
+                    </options>-->
                 </configuration>
                 <executions>
                     <execution>

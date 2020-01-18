@@ -8,45 +8,61 @@ import com.github.thinwonton.mybatis.metamodel.core.util.ClassWriterUtils;
 import com.github.thinwonton.mybatis.metamodel.core.util.ReflectionUtils;
 import com.github.thinwonton.mybatis.metamodel.core.util.StringUtils;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.session.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
 public class MetaModelContext {
-    private final Configuration configuration;
-
     private final EntityResolver entityResolver;
 
     private final Set<Class<?>> processedMetaModelClasses = new HashSet<>();
+    private final Map<Class<?>, Table> resolvedTableInfos = new HashMap<>();
 
     private final Map<Class<?>, Table> tableMapping = new HashMap<>();
 
-    public MetaModelContext(Configuration configuration, EntityResolver entityResolver) {
-        this.configuration = configuration;
+    private final GlobalConfig globalConfig;
+
+    private Logger logger = LoggerFactory.getLogger(MetaModelContext.class);
+
+    public MetaModelContext(GlobalConfigFactory globalConfigFactory, EntityResolver entityResolver) {
+        this.globalConfig = globalConfigFactory.getGlobalConfig();
         this.entityResolver = entityResolver;
         registerMetaModels();
     }
 
     private void registerMetaModels() {
-        for (Object object : new ArrayList<Object>(configuration.getMappedStatements())) {
+        for (Object object : new ArrayList<Object>(globalConfig.getMappedStatements())) {
             if (object instanceof MappedStatement) {
                 MappedStatement mappedStatement = (MappedStatement) object;
 
                 //mappedStatement映射的实体类
+                logger.debug("Start resolving entity class for mappedStatement: " + mappedStatement.getId());
                 Class<?> entityClass = entityResolver.getMappedEntityClass(mappedStatement);
                 if (entityClass == null) {
-                    //TODO 打印日志，如果不通过 mybatis-plus 或者 tk-mapper注册 mappedStatements，有可能不存在
+                    logger.debug("Ignore resolve entity class for mappedStatement: " + mappedStatement.getId());
                     continue;
                 }
 
                 //创建table
-                String tableName = entityResolver.resolveTableName(entityClass);
-                if (StringUtils.isEmpty(tableName)) {
-                    throw new MetaModelRegisterException("Resolved table name should not be empty, entity class is " + entityClass.getName());
+                Table table = resolvedTableInfos.get(entityClass);
+                if (Objects.isNull(table)) {
+                    logger.debug("Start resolving table info for entity class: " + entityClass.getName());
+                    String simpleTableName = entityResolver.resolveSimpleTableName(globalConfig, entityClass);
+                    if (StringUtils.isEmpty(simpleTableName)) {
+                        throw new MetaModelRegisterException("Resolved table name should not be empty, entity class is " + entityClass.getName());
+                    }
+
+                    Table.CatalogSchemaInfo catalogSchemaInfo = entityResolver.resolveTableCatalogSchemaInfo(globalConfig, entityClass);
+
+                    table = new Table();
+                    table.setSimpleTableName(simpleTableName);
+                    table.setEntityClass(entityClass);
+                    table.setCatalogSchemaInfo(catalogSchemaInfo);
+
+                    resolvedTableInfos.put(entityClass, table);
                 }
-                Table table = new Table(entityClass, tableName);
-                table.setTableName(tableName);
 
                 //根据实体类获取对应的metaModel类
                 Class<?> metaModelClass = tryGettingMappedMetaModelClass(entityClass);
@@ -73,7 +89,7 @@ public class MetaModelContext {
     private void registerMetaModel(Table table, final Class<?> metaModelClass) {
         Class<?> entityClass = loadEntityClass(metaModelClass);
 
-        Collection<TableField> tableFields = entityResolver.resolveTableFields(table, entityClass);
+        Collection<TableField> tableFields = entityResolver.resolveTableFields(globalConfig, table, entityClass);
         table.addTableFields(tableFields);
 
         tableMapping.put(metaModelClass, table);
@@ -92,8 +108,7 @@ public class MetaModelContext {
                 field.set(null, persistentAttribute);
             } catch (IllegalAccessException e) {
                 throw new MetaModelRegisterException(
-                        "Unable to inject static metamodel attribute : " + metaModelClass.getName() + '#' + field.getName(),
-                        e);
+                        "Unable to inject static metamodel attribute : " + metaModelClass.getName() + '#' + field.getName(), e);
             }
         }
     }
@@ -142,22 +157,28 @@ public class MetaModelContext {
      *
      * @param metaModelClass
      */
-    public String getTableName(Class<?> metaModelClass) {
+    public String getSimpleTableName(Class<?> metaModelClass) {
         Table table = getTable(metaModelClass);
-        return table.getTableName();
+        if (Objects.isNull(table)) {
+            throw new IllegalArgumentException("Cannot find table info from meta model class : " + metaModelClass.getName());
+        }
+        return table.getSimpleTableName();
     }
 
     /**
      * 获取带schema的表名
-     * @param metaModelClass
-     * @return
+     *
+     * @param metaModelClass meta model类
      */
-    public String getComplicatedTableName(Class<?> metaModelClass) {
+    public String getTableName(Class<?> metaModelClass) {
         Table table = getTable(metaModelClass);
-        if (StringUtils.isNotEmpty(table.getSchema())) {
-            return table.getSchema() + StringUtils.DOT + table.getTableName();
-        } else {
-            return table.getTableName();
+        if (Objects.isNull(table)) {
+            throw new IllegalArgumentException("Cannot find table info from meta model class : " + metaModelClass.getName());
         }
+        return table.getTableName();
+    }
+
+    public GlobalConfig getGlobalConfig() {
+        return globalConfig;
     }
 }

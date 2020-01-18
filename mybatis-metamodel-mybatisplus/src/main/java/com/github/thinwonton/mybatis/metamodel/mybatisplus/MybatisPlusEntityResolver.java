@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.mapper.Mapper;
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
+import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.Table;
 import com.github.thinwonton.mybatis.metamodel.core.register.TableField;
 import com.github.thinwonton.mybatis.metamodel.core.util.RegisterUtils;
@@ -49,7 +50,7 @@ public class MybatisPlusEntityResolver implements EntityResolver {
     }
 
     @Override
-    public String resolveTableName(Class<?> entityClass) {
+    public String resolveSimpleTableName(GlobalConfig globalConfig, Class<?> entityClass) {
         String tableName = null;
         if (entityClass.isAnnotationPresent(TableName.class)) {
             TableName tableNameAnnotation = entityClass.getAnnotation(TableName.class);
@@ -66,7 +67,7 @@ public class MybatisPlusEntityResolver implements EntityResolver {
     }
 
     @Override
-    public Collection<TableField> resolveTableFields(Table table, Class<?> entityClass) {
+    public Collection<TableField> resolveTableFields(GlobalConfig globalConfig, Table table, Class<?> entityClass) {
         //TODO 处理setter里面的属性
         List<TableField> tableFields = new ArrayList<>();
         Field[] declaredFields = entityClass.getDeclaredFields();
@@ -77,6 +78,21 @@ public class MybatisPlusEntityResolver implements EntityResolver {
             }
         }
         return tableFields;
+    }
+
+    @Override
+    public Table.CatalogSchemaInfo resolveTableCatalogSchemaInfo(GlobalConfig globalConfig, Class<?> entityClass) {
+        Table.CatalogSchemaInfo catalogSchemaInfo = new Table.CatalogSchemaInfo();
+
+        if (entityClass.isAnnotationPresent(TableName.class)) {
+            TableName table = entityClass.getAnnotation(TableName.class);
+            catalogSchemaInfo.setSchema(table.schema());
+        }
+
+        catalogSchemaInfo.setGlobalCatalog(globalConfig.getCatalog());
+        catalogSchemaInfo.setGlobalSchema(globalConfig.getSchema());
+
+        return catalogSchemaInfo;
     }
 
     private TableField resolveTableField(Table table, Class<?> entityClass, Field field) {

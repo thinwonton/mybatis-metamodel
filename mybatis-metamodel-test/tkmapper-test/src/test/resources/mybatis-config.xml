@@ -31,6 +31,10 @@
 
     <mappers>
         <mapper class="com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.mapper.MusicMapper"/>
+
+        <!--测试schema和catalog-->
+        <mapper class="com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.mapper.SpecCatalogSchemaSportMapper"/>
+        <mapper class="com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.mapper.SpecSchemaSportMapper"/>
     </mappers>
 
 </configuration>

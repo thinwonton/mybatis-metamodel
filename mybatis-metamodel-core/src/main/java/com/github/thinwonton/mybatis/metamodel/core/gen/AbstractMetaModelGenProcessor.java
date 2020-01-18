@@ -15,9 +15,6 @@ import javax.tools.Diagnostic;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- *
- */
 public abstract class AbstractMetaModelGenProcessor extends AbstractProcessor {
     //打印processor日志的开关
     public static final String DEBUG_OPTION = "debug";
@@ -28,8 +25,6 @@ public abstract class AbstractMetaModelGenProcessor extends AbstractProcessor {
 
     //meta model的writer
     private ClassWriter classWriter;
-
-    private boolean initialized = false;
 
     public abstract ElementResolver getElementResolver(MetaModelGenContext metaModelGenContext, TypeElement element);
 
@@ -43,6 +38,13 @@ public abstract class AbstractMetaModelGenProcessor extends AbstractProcessor {
             this.metaModelGenContext = new MetaModelGenContext(processingEnv, this);
             this.classWriter = getClassWriter(metaModelGenContext);
         }
+    }
+
+    @Override
+    public Set<String> getSupportedOptions() {
+        Set<String> options = new HashSet<>();
+        options.add(DEBUG_OPTION);
+        return options;
     }
 
     @Override

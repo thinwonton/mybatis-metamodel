@@ -21,6 +21,8 @@ import java.sql.Connection;
 public class TKMapperTestBase {
     private SqlSessionFactory sqlSessionFactory;
 
+    private MapperHelper mapperHelper;
+
     @Before
     public void setup() {
         try {
@@ -42,11 +44,15 @@ public class TKMapperTestBase {
      */
     protected void configMapperHelper() {
         //创建一个MapperHelper
-        MapperHelper mapperHelper = new MapperHelper();
+        mapperHelper = new MapperHelper();
         //设置配置
         mapperHelper.setConfig(getConfig());
         //配置完成后，执行下面的操作
         mapperHelper.processConfiguration(getSqlSessionFactory().getConfiguration());
+    }
+
+    public MapperHelper getMapperHelper() {
+        return mapperHelper;
     }
 
     /**
