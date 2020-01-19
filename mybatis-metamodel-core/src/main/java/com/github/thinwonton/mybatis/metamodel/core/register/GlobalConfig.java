@@ -1,5 +1,6 @@
 package com.github.thinwonton.mybatis.metamodel.core.register;
 
+import com.github.thinwonton.mybatis.metamodel.core.util.Style;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 
@@ -20,6 +21,11 @@ public final class GlobalConfig {
      * 数据库的schema
      */
     private String schema;
+
+    /**
+     * 字段的转换方式
+     */
+    private Style style;
 
     /**
      * mybatis的 MappedStatement
@@ -52,5 +58,13 @@ public final class GlobalConfig {
 
     public Collection<MappedStatement> getMappedStatements() {
         return mappedStatements.values();
+    }
+
+    public Style getStyle() {
+        return style;
+    }
+
+    public void setStyle(Style style) {
+        this.style = style;
     }
 }

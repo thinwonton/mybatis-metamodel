@@ -93,7 +93,6 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
@@ -104,8 +103,6 @@
                             com.github.thinwonton.mybatis.metamodel.tkmapper.TKMapperMetaModelGenProcessor
                         </processor>
                     </processors>
-                    <!-- source output directory -->
-                    <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
                     <!--<options>
                         <debug>true</debug>
                     </options>-->

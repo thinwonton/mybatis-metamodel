@@ -21,7 +21,7 @@ import java.io.IOException;
 /**
  * 测试生成的 MetaModel
  */
-public class MetaModelTest extends MybatisPlusTestBase {
+public class MybatisPlusMetaModelTest extends MybatisPlusTestBase {
 
     private MetaModelContext metaModelContext;
 
@@ -33,6 +33,7 @@ public class MetaModelTest extends MybatisPlusTestBase {
         com.baomidou.mybatisplus.core.config.GlobalConfig.DbConfig dbConfig = new com.baomidou.mybatisplus.core.config.GlobalConfig.DbConfig();
         globalConfig.setDbConfig(dbConfig);
         dbConfig.setSchema(GLOBAL_SCHEMA_NAME);
+        dbConfig.setTableUnderline(true);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class MetaModelTest extends MybatisPlusTestBase {
         String complicatedTableName = metaModelContext.getTableName(Music_.class);
         Assert.assertEquals(expectedTableName, complicatedTableName);
 
-        String expectedSimpleTableName2 = "SpecSchemaSport";
+        String expectedSimpleTableName2 = "spec_schema_sport";
         String expectedTableName2 = Table.makeTableName(SpecSchemaSport.SCHEMA, expectedSimpleTableName2);
         String simpleTableName2 = metaModelContext.getSimpleTableName(SpecSchemaSport_.class);
         Assert.assertEquals(expectedSimpleTableName2, simpleTableName2);

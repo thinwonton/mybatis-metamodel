@@ -60,8 +60,9 @@ public class MybatisPlusEntityResolver implements EntityResolver {
         }
 
         if (tableName == null) {
-            //TODO 根据规则处理表名
             tableName = entityClass.getSimpleName();
+            // 根据全局配置转换获取表名
+            tableName = StringUtils.transform(tableName, globalConfig.getStyle());
         }
         return tableName;
     }

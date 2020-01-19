@@ -18,7 +18,7 @@ import tk.mybatis.mapper.entity.Config;
 /**
  * 测试生成的 MetaModel
  */
-public class MetaModelTest extends TKMapperTestBase {
+public class TKMapperMetaModelTest extends TKMapperTestBase {
 
     private MetaModelContext metaModelContext;
 
@@ -49,14 +49,14 @@ public class MetaModelTest extends TKMapperTestBase {
         String complicatedTableName = metaModelContext.getTableName(Music_.class);
         Assert.assertEquals(expectedTableName, complicatedTableName);
 
-        String expectedSimpleTableName2 = "SpecCatalogSchemaSport";
+        String expectedSimpleTableName2 = "spec_catalog_schema_sport";
         String expectedTableName2 = Table.makeTableName(SpecCatalogSchemaSport.CATALOG, expectedSimpleTableName2);
         String simpleTableName2 = metaModelContext.getSimpleTableName(SpecCatalogSchemaSport_.class);
         Assert.assertEquals(expectedSimpleTableName2, simpleTableName2);
         String complicatedTableName2 = metaModelContext.getTableName(SpecCatalogSchemaSport_.class);
         Assert.assertEquals(expectedTableName2, complicatedTableName2);
 
-        String expectedSimpleTableName3 = "SpecSchemaSport";
+        String expectedSimpleTableName3 = "spec_schema_sport";
         String expectedTableName3 = Table.makeTableName(SpecSchemaSport.SCHEMA, expectedSimpleTableName3);
         String simpleTableName3 = metaModelContext.getSimpleTableName(SpecSchemaSport_.class);
         Assert.assertEquals(expectedSimpleTableName3, simpleTableName3);

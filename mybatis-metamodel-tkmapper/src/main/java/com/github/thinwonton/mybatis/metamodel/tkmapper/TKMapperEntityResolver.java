@@ -6,9 +6,12 @@ import com.github.thinwonton.mybatis.metamodel.core.register.Table;
 import com.github.thinwonton.mybatis.metamodel.core.register.TableField;
 import com.github.thinwonton.mybatis.metamodel.core.util.RegisterUtils;
 import com.github.thinwonton.mybatis.metamodel.core.util.StringUtils;
+import com.github.thinwonton.mybatis.metamodel.core.util.Style;
+import com.github.thinwonton.mybatis.metamodel.tkmapper.util.Utils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.type.JdbcType;
 import tk.mybatis.mapper.annotation.ColumnType;
+import tk.mybatis.mapper.annotation.NameStyle;
 import tk.mybatis.mapper.annotation.RegisterMapper;
 import tk.mybatis.mapper.util.SimpleTypeUtil;
 import tk.mybatis.mapper.util.StringUtil;
@@ -61,9 +64,18 @@ public class TKMapperEntityResolver implements EntityResolver {
         }
 
         if (tableName == null) {
-            //TODO 根据规则处理表名
+            //style，NameStyle 注解优先于全局配置
+            Style style = globalConfig.getStyle();
+            if (entityClass.isAnnotationPresent(NameStyle.class)) {
+                NameStyle nameStyle = entityClass.getAnnotation(NameStyle.class);
+                style = Utils.transform(nameStyle.value());
+            }
+
             tableName = entityClass.getSimpleName();
+            //根据style转换table name
+            tableName = StringUtils.transform(tableName, style);
         }
+
         return tableName;
     }
 
