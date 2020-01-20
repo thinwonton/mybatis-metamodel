@@ -1,5 +1,7 @@
 package com.github.thinwonton.mybatis.metamodel.core.gen;
 
+import com.github.thinwonton.mybatis.metamodel.core.util.TypeUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -7,9 +9,6 @@ import java.util.TreeSet;
 
 /**
  * ImportContextImpl
- *
- * @author hugo
- * @date 2019/12/29
  */
 public class ImportContextImpl implements ImportContext {
 
@@ -18,23 +17,6 @@ public class ImportContextImpl implements ImportContext {
     private Map<String, String> simpleNames = new HashMap<String, String>();
 
     private String basePackage = "";
-
-    private static final Map<String, String> PRIMITIVES = new HashMap<String, String>();
-
-    static {
-        PRIMITIVES.put("char", "Character");
-
-        PRIMITIVES.put("byte", "Byte");
-        PRIMITIVES.put("short", "Short");
-        PRIMITIVES.put("int", "Integer");
-        PRIMITIVES.put("long", "Long");
-
-        PRIMITIVES.put("boolean", "Boolean");
-
-        PRIMITIVES.put("float", "Float");
-        PRIMITIVES.put("double", "Double");
-
-    }
 
     public ImportContextImpl(String basePackage) {
         this.basePackage = basePackage;
@@ -104,7 +86,7 @@ public class ImportContextImpl implements ImportContext {
     }
 
     private boolean isPrimitive(String className) {
-        return PRIMITIVES.containsKey(className);
+        return TypeUtils.isPrimitiveType(className);
     }
 
     private boolean inSamePackage(String className) {

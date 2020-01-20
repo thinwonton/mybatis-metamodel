@@ -20,7 +20,7 @@ public class MetaModelFieldGenTest {
     @Test
     public void testNotGenTransientField() {
         List<String> expectedFields = Arrays.asList(
-                "name", "id", "authorName"
+                "name", "id", "authorName", "length"
         );
 
         List<String> notExpectedFields = Arrays.asList(

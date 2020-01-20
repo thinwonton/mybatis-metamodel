@@ -1,8 +1,8 @@
 package com.github.thinwonton.mybatis.metamodel.tkmapper;
 
 import com.github.thinwonton.mybatis.metamodel.core.gen.*;
-import com.github.thinwonton.mybatis.metamodel.core.util.AccessType;
 import com.github.thinwonton.mybatis.metamodel.core.util.GenerateUtils;
+import com.github.thinwonton.mybatis.metamodel.core.util.TypeUtils;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -18,20 +18,26 @@ import javax.persistence.Transient;
 public class TKMapperMetaAttributeConverter implements MetaAttributeConverter {
 
     @Override
-    public boolean canConvert(Element memberOfClass, AccessType accessType) {
-        //TODO 处理置于getter/setter的property
-        if (AccessType.PROPERTY.equals(accessType)) {
-            return false;
-        }
-
-        return !GenerateUtils.containsAnnotation(memberOfClass, Transient.class.getCanonicalName()) //不是Transient注解修饰的成员
-                && !memberOfClass.getModifiers().contains(Modifier.TRANSIENT) //不是transient修饰的成员
-                && !memberOfClass.getModifiers().contains(Modifier.STATIC); //不是static修饰的成员
+    public boolean filter(Element memberOfClass) {
+        // 以下情况忽略生成 meta model 的 attr
+        // 1. javax.persistence.Transient注解修饰的成员
+        // 2. TRANSIENT 修饰词
+        // 3. STATIC 修饰词
+        return GenerateUtils.containsAnnotation(memberOfClass, Transient.class.getCanonicalName())
+                || memberOfClass.getModifiers().contains(Modifier.TRANSIENT)
+                || memberOfClass.getModifiers().contains(Modifier.STATIC);
     }
 
     @Override
     public MetaAttributeDescriptor visitPrimitive(MetaModelGenContext metaModelGenContext, MetaEntity metaEntity, PrimitiveType t, Element element) {
-        // 原语类型不支持
+        //对于tk mapper，有个全局配置 usePrimitiveType 控制是否对原语类型生成meta attr
+        if (metaModelGenContext.isUsePrimitiveType()) {
+            return new DefaultMetaAttributeDescriptor(
+                    metaEntity,
+                    element,
+                    TypeUtils.toTypeString(t)
+            );
+        }
         return null;
     }
 
@@ -40,9 +46,8 @@ public class TKMapperMetaAttributeConverter implements MetaAttributeConverter {
         TypeElement returnedElement = (TypeElement) metaModelGenContext.getProcessingEnvironment().getTypeUtils().asElement(t);
         String typeName = returnedElement.getQualifiedName().toString();
 
-        //转换java基本Class类型
-        if (ElementKind.CLASS.equals(returnedElement.getKind())
-                && isJavaBasicTypes(typeName)) {
+        //是简单包装类
+        if (ElementKind.CLASS.equals(returnedElement.getKind()) && TypeUtils.isSimpleType(typeName)) {
             return new DefaultMetaAttributeDescriptor(
                     metaEntity,
                     element,
@@ -50,13 +55,13 @@ public class TKMapperMetaAttributeConverter implements MetaAttributeConverter {
             );
         }
 
-        //TODO 处理 ENUM
+        if (ElementKind.ENUM.equals(returnedElement.getKind())) {
+            //TODO 处理 ENUM
+        }
+
+        // TODO 实体类型的, Collection/Map
 
         return null;
     }
 
-
-    private boolean isJavaBasicTypes(String typeName) {
-        return GenerateUtils.BASIC_WRAPPER_TYPES.contains(typeName);
-    }
 }

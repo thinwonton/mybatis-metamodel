@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.mapper.Mapper;
+import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
 import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.Table;
@@ -59,7 +60,7 @@ public class MybatisPlusEntityResolver implements EntityResolver {
             }
         }
 
-        if (tableName == null) {
+        if (StringUtils.isEmpty(tableName)) {
             tableName = entityClass.getSimpleName();
             // 根据全局配置转换获取表名
             tableName = StringUtils.transform(tableName, globalConfig.getStyle());
@@ -69,12 +70,11 @@ public class MybatisPlusEntityResolver implements EntityResolver {
 
     @Override
     public Collection<TableField> resolveTableFields(GlobalConfig globalConfig, Table table, Class<?> entityClass) {
-        //TODO 处理setter里面的属性
         List<TableField> tableFields = new ArrayList<>();
         Field[] declaredFields = entityClass.getDeclaredFields();
         for (Field field : declaredFields) {
-            TableField tableField = resolveTableField(table, entityClass, field);
-            if (tableField != null) {
+            if (!filter(field)) {
+                TableField tableField = resolveTableField(globalConfig, table, entityClass, field);
                 tableFields.add(tableField);
             }
         }
@@ -96,18 +96,24 @@ public class MybatisPlusEntityResolver implements EntityResolver {
         return catalogSchemaInfo;
     }
 
-    private TableField resolveTableField(Table table, Class<?> entityClass, Field field) {
+    private boolean filter(Field field) {
         //排除 static，Transient
         //TODO 过滤声明类型
-        com.baomidou.mybatisplus.annotation.TableField tableFieldAnnotation = field.getAnnotation(com.baomidou.mybatisplus.annotation.TableField.class);
-        boolean markedNotTableField = (tableFieldAnnotation != null && !tableFieldAnnotation.exist());
+        com.baomidou.mybatisplus.annotation.TableField annotation = field.getAnnotation(com.baomidou.mybatisplus.annotation.TableField.class);
+        boolean markedNotTableField = (annotation != null && !annotation.exist());
         if (Modifier.isStatic(field.getModifiers())
                 || Modifier.isTransient(field.getModifiers())
                 || markedNotTableField) {
-            return null;
+            return true;
         }
+        return false;
+    }
 
-        TableField tableField = new TableField(table, field);
+    private TableField resolveTableField(GlobalConfig globalConfig, Table table, Class<?> entityClass, Field field) {
+
+        TableField tableField = new TableField();
+        tableField.setTable(table);
+        tableField.setField(field);
 
         //Id信息
         if (field.isAnnotationPresent(TableId.class)) {
@@ -118,7 +124,7 @@ public class MybatisPlusEntityResolver implements EntityResolver {
         tableField.setProperty(field.getName());
 
         //column name
-        String columnName = getColumnName(field, tableField.isId());
+        String columnName = getColumnName(globalConfig, field, tableField.isId());
         tableField.setColumn(columnName);
 
         //java type
@@ -126,6 +132,7 @@ public class MybatisPlusEntityResolver implements EntityResolver {
 
         // jdbcType
         JdbcType jdbcType = JdbcType.UNDEFINED;
+        com.baomidou.mybatisplus.annotation.TableField tableFieldAnnotation = field.getAnnotation(com.baomidou.mybatisplus.annotation.TableField.class);
         if (tableFieldAnnotation != null && tableFieldAnnotation.jdbcType() != JdbcType.UNDEFINED) {
             jdbcType = tableFieldAnnotation.jdbcType();
         }
@@ -134,7 +141,7 @@ public class MybatisPlusEntityResolver implements EntityResolver {
         return tableField;
     }
 
-    private String getColumnName(Field field, boolean isIdColumn) {
+    private String getColumnName(GlobalConfig globalConfig, Field field, boolean isIdColumn) {
 
         String columnName;
         if (isIdColumn) {
@@ -144,7 +151,7 @@ public class MybatisPlusEntityResolver implements EntityResolver {
                 columnName = tableIdAnnotation.value();
             } else {
                 columnName = field.getName();
-                // //TODO 需要根据配置规则获取命名
+                columnName = StringUtils.transform(columnName, globalConfig.getStyle());
             }
         } else {
             //处理非ID列
@@ -153,7 +160,7 @@ public class MybatisPlusEntityResolver implements EntityResolver {
                 columnName = tableFieldAnnotation.value();
             } else {
                 columnName = field.getName();
-                // //TODO 需要根据配置规则获取命名
+                columnName = StringUtils.transform(columnName, globalConfig.getStyle());
             }
         }
         return columnName;

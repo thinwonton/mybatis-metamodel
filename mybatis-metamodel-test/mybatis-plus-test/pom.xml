@@ -93,11 +93,9 @@
                             com.github.thinwonton.mybatis.metamodel.mybatisplus.MybatisPlusMetaModelGenProcessor
                         </processor>
                     </processors>
-                    <!-- source output directory -->
-                    <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
-                   <!-- <options>
+                    <options>
                         <debug>true</debug>
-                    </options>-->
+                    </options>
                 </configuration>
                 <executions>
                     <execution>
@@ -120,7 +118,7 @@
                         <phase>generate-test-sources</phase>
                         <configuration>
                             <outputDirectory>
-                                ${project.build.directory}/generated-test-sources/annotations
+                                ${project.build.directory}/generated-test-sources/test-annotations
                             </outputDirectory>
                         </configuration>
                     </execution>

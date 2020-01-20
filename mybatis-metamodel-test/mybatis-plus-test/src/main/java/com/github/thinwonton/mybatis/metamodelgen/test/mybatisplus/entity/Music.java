@@ -8,6 +8,8 @@ import com.github.thinwonton.mybatis.metamodel.core.annotation.GenMetaModel;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.type.JdbcType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
@@ -16,7 +18,7 @@ import java.io.Serializable;
 public class Music extends Entity implements Serializable {
     private static final long serialVersionUID = 767652858834706096L;
 
-    private transient Log log = LogFactory.getLog(getClass());
+    private transient Logger log = LoggerFactory.getLogger(Music.class);
 
     @TableField(exist = false)
     private byte[] content;
@@ -24,6 +26,8 @@ public class Music extends Entity implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
     private String name;
+
+    private int length;
 
     @TableField(value = "authorName", jdbcType = JdbcType.VARCHAR)
     private String authorName;
@@ -58,5 +62,13 @@ public class Music extends Entity implements Serializable {
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
     }
 }

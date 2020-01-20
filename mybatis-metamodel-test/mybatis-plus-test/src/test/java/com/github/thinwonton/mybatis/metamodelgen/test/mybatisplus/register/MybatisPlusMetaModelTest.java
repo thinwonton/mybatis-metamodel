@@ -17,6 +17,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * 测试生成的 MetaModel
@@ -91,6 +92,28 @@ public class MybatisPlusMetaModelTest extends MybatisPlusTestBase {
         Assert.assertEquals(String.class, Music_.authorName.getJavaType());
         Assert.assertEquals("authorName", Music_.authorName.getProperty());
         Assert.assertEquals(JdbcType.VARCHAR, Music_.authorName.getJdbcType());
+
+        //length
+        Assert.assertEquals("length", Music_.length.getColumn());
+        Assert.assertFalse(Music_.length.isId());
+        Assert.assertEquals(int.class, Music_.length.getJavaType());
+        Assert.assertEquals("length", Music_.length.getProperty());
+        Assert.assertEquals(JdbcType.UNDEFINED, Music_.length.getJdbcType());
+
+        //createDate
+        Assert.assertEquals("create_date", Music_.createDate.getColumn());
+        Assert.assertFalse(Music_.createDate.isId());
+        Assert.assertEquals(Date.class, Music_.createDate.getJavaType());
+        Assert.assertEquals("createDate", Music_.createDate.getProperty());
+        Assert.assertEquals(JdbcType.UNDEFINED, Music_.createDate.getJdbcType());
+
+        //updateDate
+        Assert.assertEquals("update_date", Music_.updateDate.getColumn());
+        Assert.assertFalse(Music_.updateDate.isId());
+        Assert.assertEquals(Date.class, Music_.updateDate.getJavaType());
+        Assert.assertEquals("updateDate", Music_.updateDate.getProperty());
+        Assert.assertEquals(JdbcType.UNDEFINED, Music_.updateDate.getJdbcType());
+
     }
 
     @Test

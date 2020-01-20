@@ -16,7 +16,12 @@ public final class MetaModelGenContext {
 
     private final Processor metaModelProducer;
 
-    private boolean logDebug;
+    private boolean logDebug = false;
+
+    /**
+     * 仅仅在tk mapper中生效
+     */
+    private boolean usePrimitiveType = false;
 
     /**
      * 已经解析的orm entity
@@ -33,10 +38,11 @@ public final class MetaModelGenContext {
 
     private void config() {
         logDebug = Boolean.parseBoolean(processingEnvironment.getOptions().get(AbstractMetaModelGenProcessor.DEBUG_OPTION));
+        usePrimitiveType = Boolean.parseBoolean(processingEnvironment.getOptions().get(AbstractMetaModelGenProcessor.USE_PRIMITIVE_TYPE_OPTION));
     }
 
     public void logMessage(Diagnostic.Kind type, String message) {
-        if (!logDebug && type.equals(Diagnostic.Kind.OTHER)) {
+        if (!logDebug && type.equals(Diagnostic.Kind.NOTE)) {
             return;
         }
         this.processingEnvironment.getMessager().printMessage(type, message);
@@ -70,4 +76,7 @@ public final class MetaModelGenContext {
         return processingEnvironment;
     }
 
+    public boolean isUsePrimitiveType() {
+        return usePrimitiveType;
+    }
 }

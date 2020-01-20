@@ -19,6 +19,9 @@ public abstract class AbstractMetaModelGenProcessor extends AbstractProcessor {
     //打印processor日志的开关
     public static final String DEBUG_OPTION = "debug";
 
+    //仅用于TK MAPPER，原语类型的成员变量生效
+    public static final String USE_PRIMITIVE_TYPE_OPTION = "usePrimitiveType";
+
     private static final Boolean ALLOW_OTHER_PROCESSORS_TO_CLAIM_ANNOTATIONS = false;
 
     private MetaModelGenContext metaModelGenContext;
@@ -44,6 +47,7 @@ public abstract class AbstractMetaModelGenProcessor extends AbstractProcessor {
     public Set<String> getSupportedOptions() {
         Set<String> options = new HashSet<>();
         options.add(DEBUG_OPTION);
+        options.add(USE_PRIMITIVE_TYPE_OPTION);
         return options;
     }
 
@@ -76,7 +80,7 @@ public abstract class AbstractMetaModelGenProcessor extends AbstractProcessor {
         for (TypeElement element : processingEntityElements) {
             String elementName = element.getQualifiedName().toString();
             if (!metaModelGenContext.isAlreadyResolved(elementName)) {
-                metaModelGenContext.logMessage(Diagnostic.Kind.OTHER, "Processing orm class element " + element.toString());
+                metaModelGenContext.logMessage(Diagnostic.Kind.NOTE, "Processing orm class element " + element.toString());
                 MetaEntity metaEntity = getElementResolver(metaModelGenContext, element).resolveElement(element);
                 metaModelGenContext.addResolvedMetaEntity(elementName, metaEntity);
             }
@@ -116,7 +120,7 @@ public abstract class AbstractMetaModelGenProcessor extends AbstractProcessor {
             if (metaModelGenContext.isAlreadyGenerated(entity.getQualifiedName())) {
                 continue;
             }
-            metaModelGenContext.logMessage(Diagnostic.Kind.OTHER, "Writing meta model for entity " + entity.getQualifiedName());
+            metaModelGenContext.logMessage(Diagnostic.Kind.NOTE, "Writing meta model for entity " + entity.getQualifiedName());
             ClassWriterUtils.writeFile(entity, classWriter);
             metaModelGenContext.markGenerated(entity.getQualifiedName());
         }

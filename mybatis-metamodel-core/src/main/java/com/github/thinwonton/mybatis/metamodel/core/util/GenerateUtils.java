@@ -14,60 +14,11 @@ import java.util.*;
  */
 public final class GenerateUtils {
 
-    public static final Map<TypeKind, String> PRIMITIVE_WRAPPERS = new HashMap<TypeKind, String>();
-    public static final Map<TypeKind, String> PRIMITIVES = new HashMap<TypeKind, String>();
     public static final Set<String> EXCLUDING_SUPERCLASS_TYPES = new HashSet<>();
-    public static final List<String> BASIC_WRAPPER_TYPES = new ArrayList<String>();
-
-    //初始化原语类型
-    static {
-        PRIMITIVE_WRAPPERS.put(TypeKind.CHAR, "Character");
-
-        PRIMITIVE_WRAPPERS.put(TypeKind.BYTE, "Byte");
-        PRIMITIVE_WRAPPERS.put(TypeKind.SHORT, "Short");
-        PRIMITIVE_WRAPPERS.put(TypeKind.INT, "Integer");
-        PRIMITIVE_WRAPPERS.put(TypeKind.LONG, "Long");
-
-        PRIMITIVE_WRAPPERS.put(TypeKind.BOOLEAN, "Boolean");
-
-        PRIMITIVE_WRAPPERS.put(TypeKind.FLOAT, "Float");
-        PRIMITIVE_WRAPPERS.put(TypeKind.DOUBLE, "Double");
-
-        PRIMITIVES.put(TypeKind.CHAR, "char");
-        PRIMITIVES.put(TypeKind.BYTE, "byte");
-        PRIMITIVES.put(TypeKind.SHORT, "short");
-        PRIMITIVES.put(TypeKind.INT, "int");
-        PRIMITIVES.put(TypeKind.LONG, "long");
-        PRIMITIVES.put(TypeKind.BOOLEAN, "boolean");
-        PRIMITIVES.put(TypeKind.FLOAT, "float");
-        PRIMITIVES.put(TypeKind.DOUBLE, "double");
-
-    }
 
     //初始化查找父类时需要排除的类型
     static {
         EXCLUDING_SUPERCLASS_TYPES.add(Object.class.getCanonicalName());
-    }
-
-    //初始化基本类型
-    static {
-        BASIC_WRAPPER_TYPES.add(java.lang.String.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.lang.Boolean.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.lang.Byte.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.lang.Character.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.lang.Short.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.lang.Integer.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.lang.Long.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.lang.Float.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.lang.Double.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.math.BigInteger.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.math.BigDecimal.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.util.Date.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.util.Calendar.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.sql.Date.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.sql.Time.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.sql.Timestamp.class.getName());
-        BASIC_WRAPPER_TYPES.add(java.sql.Blob.class.getName());
     }
 
     private GenerateUtils() {
@@ -176,19 +127,6 @@ public final class GenerateUtils {
         } else {
             return null;
         }
-    }
-
-    /**
-     * 基本类型转换成包装类，返回包装类的类型字符串
-     *
-     * @param type
-     * @return
-     */
-    public static String toWrapperTypeString(TypeMirror type) {
-        if (type.getKind().isPrimitive()) {
-            return PRIMITIVE_WRAPPERS.get(type.getKind());
-        }
-        return type.toString();
     }
 
     /**

@@ -10,6 +10,7 @@ import com.github.thinwonton.mybatis.metamodel.core.util.Style;
 import com.github.thinwonton.mybatis.metamodel.tkmapper.util.Utils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.UnknownTypeHandler;
 import tk.mybatis.mapper.annotation.ColumnType;
 import tk.mybatis.mapper.annotation.NameStyle;
 import tk.mybatis.mapper.annotation.RegisterMapper;
@@ -63,7 +64,7 @@ public class TKMapperEntityResolver implements EntityResolver {
             }
         }
 
-        if (tableName == null) {
+        if (StringUtils.isEmpty(tableName)) {
             //style，NameStyle 注解优先于全局配置
             Style style = globalConfig.getStyle();
             if (entityClass.isAnnotationPresent(NameStyle.class)) {
@@ -85,12 +86,25 @@ public class TKMapperEntityResolver implements EntityResolver {
         List<TableField> tableFields = new ArrayList<>();
         Field[] declaredFields = entityClass.getDeclaredFields();
         for (Field field : declaredFields) {
-            TableField tableField = resolveTableField(table, entityClass, field);
-            if (tableField != null) {
+            if (!filter(field)) {
+                TableField tableField = resolveTableField(globalConfig, table, entityClass, field);
                 tableFields.add(tableField);
             }
         }
         return tableFields;
+    }
+
+    private boolean filter(Field field) {
+        //排除 static，Transient
+        //排除 @javax.persistence.Transient 注释
+        //只接受基本包装类
+        if (Modifier.isStatic(field.getModifiers())
+                || Modifier.isTransient(field.getModifiers())
+                || field.isAnnotationPresent(Transient.class)
+                || !SimpleTypeUtil.isSimpleType(field.getType())) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -110,18 +124,13 @@ public class TKMapperEntityResolver implements EntityResolver {
         return catalogSchemaInfo;
     }
 
-    private TableField resolveTableField(Table table, Class<?> entityClass, Field field) {
-        //排除 static，Transient
-        //排除 @javax.persistence.Transient 注释
-        //只接受基本包装类
-        if (Modifier.isStatic(field.getModifiers())
-                || Modifier.isTransient(field.getModifiers())
-                || field.isAnnotationPresent(Transient.class)
-                || !SimpleTypeUtil.isSimpleType(field.getType())) {
-            return null;
-        }
+    private TableField resolveTableField(GlobalConfig globalConfig, Table table, Class<?> entityClass, Field field) {
 
-        TableField tableField = new TableField(table, field);
+        TableField tableField = new TableField();
+        tableField.setTable(table);
+        tableField.setField(field);
+
+        // TODO GETTER SETTER
 
         //Id信息
         if (field.isAnnotationPresent(Id.class)) {
@@ -133,23 +142,7 @@ public class TKMapperEntityResolver implements EntityResolver {
 
         //column name
         //如果从 @Column 不能获取，尝试从@ColumnType获取。都不能获取，从取名规则中获取
-        String columnName = null;
-        if (field.isAnnotationPresent(Column.class)) {
-            Column column = field.getAnnotation(Column.class);
-            columnName = column.name();
-        }
-
-        if (StringUtils.isEmpty(columnName) && field.isAnnotationPresent(ColumnType.class)) {
-            ColumnType columnType = field.getAnnotation(ColumnType.class);
-            if (StringUtils.isNotEmpty(columnType.column())) {
-                columnName = columnType.column();
-            }
-        }
-
-        if (StringUtils.isEmpty(columnName)) {
-            //TODO 从命名规则中获取
-            columnName = StringUtil.camelhumpToUnderline(field.getName());
-        }
+        String columnName = getColumnName(globalConfig, entityClass, field);
         tableField.setColumn(columnName);
 
         //java type
@@ -164,6 +157,34 @@ public class TKMapperEntityResolver implements EntityResolver {
         tableField.setJdbcType(jdbcType);
 
         return tableField;
+    }
+
+    private String getColumnName(GlobalConfig globalConfig, Class<?> entityClass, Field field) {
+        Style style = globalConfig.getStyle();
+        //style，该注解优先于全局配置
+        if (entityClass.isAnnotationPresent(NameStyle.class)) {
+            NameStyle nameStyle = entityClass.getAnnotation(NameStyle.class);
+            style = Utils.transform(nameStyle.value());
+        }
+
+        //Column
+        String columnName = null;
+        if (field.isAnnotationPresent(Column.class)) {
+            Column column = field.getAnnotation(Column.class);
+            columnName = column.name();
+        }
+
+        //ColumnType
+        if (field.isAnnotationPresent(ColumnType.class) && StringUtils.isEmpty(columnName)) {
+            ColumnType columnType = field.getAnnotation(ColumnType.class);
+            columnName = columnType.column();
+        }
+
+        if (StringUtils.isEmpty(columnName)) {
+            columnName = StringUtils.transform(field.getName(), style);
+        }
+
+        return columnName;
     }
 
 }

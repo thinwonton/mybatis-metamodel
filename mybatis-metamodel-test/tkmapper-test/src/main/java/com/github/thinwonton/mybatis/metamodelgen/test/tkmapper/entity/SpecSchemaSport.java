@@ -1,6 +1,8 @@
 package com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.entity;
 
 import com.github.thinwonton.mybatis.metamodel.core.annotation.GenMetaModel;
+import tk.mybatis.mapper.annotation.NameStyle;
+import tk.mybatis.mapper.code.Style;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +16,7 @@ import static com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.entity.Sp
  */
 @GenMetaModel
 @Table(schema = SCHEMA)
+@NameStyle(Style.uppercase)
 public class SpecSchemaSport {
     public static final String SCHEMA = "SpecSchemaSport_schema";
 

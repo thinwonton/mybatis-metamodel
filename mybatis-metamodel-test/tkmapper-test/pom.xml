@@ -103,9 +103,10 @@
                             com.github.thinwonton.mybatis.metamodel.tkmapper.TKMapperMetaModelGenProcessor
                         </processor>
                     </processors>
-                    <!--<options>
+                    <options>
                         <debug>true</debug>
-                    </options>-->
+                        <usePrimitiveType>false</usePrimitiveType>
+                    </options>
                 </configuration>
                 <executions>
                     <execution>
@@ -128,7 +129,7 @@
                         <phase>generate-test-sources</phase>
                         <configuration>
                             <outputDirectory>
-                                ${project.build.directory}/generated-test-sources/annotations
+                                ${project.build.directory}/generated-test-sources/test-annotations
                             </outputDirectory>
                         </configuration>
                     </execution>

@@ -4,6 +4,8 @@ import com.github.thinwonton.mybatis.metamodel.core.annotation.GenMetaModel;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.type.JdbcType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tk.mybatis.mapper.annotation.ColumnType;
 
 import javax.persistence.*;
@@ -14,10 +16,12 @@ import java.io.Serializable;
 public class Music extends Entity implements Serializable {
     private static final long serialVersionUID = 767652858834706096L;
 
-    private transient Log log = LogFactory.getLog(getClass());
+    private transient Logger logger = LoggerFactory.getLogger(Music.class);
 
     @Transient
     private byte[] content;
+
+    private long count; //默认情况下，原型类型不是数据库字段
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,5 +62,13 @@ public class Music extends Entity implements Serializable {
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 }

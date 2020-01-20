@@ -13,7 +13,10 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.junit.Assert;
 import org.junit.Test;
+import tk.mybatis.mapper.code.Style;
 import tk.mybatis.mapper.entity.Config;
+
+import java.util.Date;
 
 /**
  * 测试生成的 MetaModel
@@ -37,6 +40,15 @@ public class TKMapperMetaModelTest extends TKMapperTestBase {
                 entityResolver);
     }
 
+    @Override
+    protected Config getConfig() {
+        Config config = new Config();
+        config.setSchema(GLOBAL_SCHEMA_NAME);
+        config.setCatalog(GLOBAL_CATALOG_NAME);
+        config.setStyle(Style.camelhump); //驼峰
+        return config;
+    }
+
     /**
      * 测试表名
      */
@@ -56,7 +68,7 @@ public class TKMapperMetaModelTest extends TKMapperTestBase {
         String complicatedTableName2 = metaModelContext.getTableName(SpecCatalogSchemaSport_.class);
         Assert.assertEquals(expectedTableName2, complicatedTableName2);
 
-        String expectedSimpleTableName3 = "spec_schema_sport";
+        String expectedSimpleTableName3 = "SPECSCHEMASPORT";
         String expectedTableName3 = Table.makeTableName(SpecSchemaSport.SCHEMA, expectedSimpleTableName3);
         String simpleTableName3 = metaModelContext.getSimpleTableName(SpecSchemaSport_.class);
         Assert.assertEquals(expectedSimpleTableName3, simpleTableName3);
@@ -89,6 +101,35 @@ public class TKMapperMetaModelTest extends TKMapperTestBase {
         Assert.assertEquals(String.class, Music_.authorName.getJavaType());
         Assert.assertEquals("authorName", Music_.authorName.getProperty());
         Assert.assertEquals(JdbcType.VARCHAR, Music_.authorName.getJdbcType());
+
+        //createDate
+        Assert.assertEquals("create_date", Music_.createDate.getColumn());
+        Assert.assertFalse(Music_.createDate.isId());
+        Assert.assertEquals(Date.class, Music_.createDate.getJavaType());
+        Assert.assertEquals("createDate", Music_.createDate.getProperty());
+        Assert.assertEquals(JdbcType.UNDEFINED, Music_.createDate.getJdbcType());
+
+        //updateDate
+        Assert.assertEquals("update_date", Music_.updateDate.getColumn());
+        Assert.assertFalse(Music_.updateDate.isId());
+        Assert.assertEquals(Date.class, Music_.updateDate.getJavaType());
+        Assert.assertEquals("updateDate", Music_.updateDate.getProperty());
+        Assert.assertEquals(JdbcType.UNDEFINED, Music_.updateDate.getJdbcType());
+
+        //测试nameStyle
+        //id
+        Assert.assertEquals("ID", FieldTestEntity_.id.getColumn());
+        Assert.assertFalse(FieldTestEntity_.id.isId());
+        Assert.assertEquals(Long.class, FieldTestEntity_.id.getJavaType());
+        Assert.assertEquals("id", FieldTestEntity_.id.getProperty());
+        Assert.assertEquals(JdbcType.UNDEFINED, FieldTestEntity_.id.getJdbcType());
+
+        //name
+        Assert.assertEquals("name2", FieldTestEntity_.name.getColumn());
+        Assert.assertFalse(FieldTestEntity_.name.isId());
+        Assert.assertEquals(String.class, FieldTestEntity_.name.getJavaType());
+        Assert.assertEquals("name", FieldTestEntity_.name.getProperty());
+        Assert.assertEquals(JdbcType.UNDEFINED, FieldTestEntity_.name.getJdbcType());
     }
 
     @Test
@@ -126,11 +167,4 @@ public class TKMapperMetaModelTest extends TKMapperTestBase {
 
     }
 
-    @Override
-    protected Config getConfig() {
-        Config config = new Config();
-        config.setSchema(GLOBAL_SCHEMA_NAME);
-        config.setCatalog(GLOBAL_CATALOG_NAME);
-        return config;
-    }
 }

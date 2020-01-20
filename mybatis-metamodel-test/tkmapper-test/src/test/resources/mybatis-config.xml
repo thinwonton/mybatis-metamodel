@@ -35,6 +35,9 @@
         <!--测试schema和catalog-->
         <mapper class="com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.mapper.SpecCatalogSchemaSportMapper"/>
         <mapper class="com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.mapper.SpecSchemaSportMapper"/>
+
+        <!--测试field-->
+        <mapper class="com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.mapper.FieldTestEntityMapper"/>
     </mappers>
 
 </configuration>

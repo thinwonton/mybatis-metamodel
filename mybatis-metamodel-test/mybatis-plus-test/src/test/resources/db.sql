@@ -6,6 +6,7 @@ CREATE table music
     authorName varchar(100),
     create_date DATETIME,
     update_date DATETIME,
+    length INTEGER,
     PRIMARY KEY (id)
 ) DEFAULT CHARSET = utf8  AUTO_INCREMENT = 6;
 

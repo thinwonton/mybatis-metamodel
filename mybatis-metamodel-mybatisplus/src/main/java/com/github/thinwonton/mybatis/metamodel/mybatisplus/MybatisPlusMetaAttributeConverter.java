@@ -2,8 +2,8 @@ package com.github.thinwonton.mybatis.metamodel.mybatisplus;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.github.thinwonton.mybatis.metamodel.core.gen.*;
-import com.github.thinwonton.mybatis.metamodel.core.util.AccessType;
 import com.github.thinwonton.mybatis.metamodel.core.util.GenerateUtils;
+import com.github.thinwonton.mybatis.metamodel.core.util.TypeUtils;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
@@ -12,30 +12,33 @@ import javax.lang.model.type.PrimitiveType;
 public class MybatisPlusMetaAttributeConverter implements MetaAttributeConverter {
 
     @Override
-    public boolean canConvert(Element memberOfClass, AccessType accessType) {
-        //TODO 处理置于getter/setter的property
-        if (AccessType.PROPERTY.equals(accessType)) {
-            return false;
-        }
-
-        //获取TableField注解
+    public boolean filter(Element memberOfClass) {
+        //TableField注解标注为exist=false
         boolean isTableField = true;
         AnnotationMirror annotationMirror = GenerateUtils.getAnnotationMirror(memberOfClass, TableField.class.getCanonicalName());
         if (annotationMirror != null) {
-            Object existObject = GenerateUtils.getAnnotationValue(annotationMirror, "exist");
-            if (existObject != null) {
-                isTableField = (boolean) existObject;
+            Object exist = GenerateUtils.getAnnotationValue(annotationMirror, "exist");
+            if (exist != null) {
+                isTableField = (boolean) exist;
             }
         }
-        return !memberOfClass.getModifiers().contains(Modifier.TRANSIENT) //不是transient修饰的成员
-                && !memberOfClass.getModifiers().contains(Modifier.STATIC) //不是static修饰的成员
-                && isTableField;
+
+        // 以下情况忽略生成 meta model 的 attr
+        // 1. TRANSIENT 修饰词
+        // 2. STATIC 修饰词
+        // 3. 原语类型
+        return memberOfClass.getModifiers().contains(Modifier.TRANSIENT)
+                || memberOfClass.getModifiers().contains(Modifier.STATIC)
+                || !isTableField;
     }
 
     @Override
     public MetaAttributeDescriptor visitPrimitive(MetaModelGenContext metaModelGenContext, MetaEntity metaEntity, PrimitiveType t, Element element) {
-        // 原语类型不支持
-        return null;
+        return new DefaultMetaAttributeDescriptor(
+                metaEntity,
+                element,
+                TypeUtils.toTypeString(t)
+        );
     }
 
     @Override
@@ -45,7 +48,7 @@ public class MybatisPlusMetaAttributeConverter implements MetaAttributeConverter
 
         //转换java基本Class类型
         if (ElementKind.CLASS.equals(returnedElement.getKind())
-                && isJavaBasicTypes(typeName)) {
+                && TypeUtils.isSimpleType(typeName)) {
             return new DefaultMetaAttributeDescriptor(
                     metaEntity,
                     element,
@@ -58,8 +61,4 @@ public class MybatisPlusMetaAttributeConverter implements MetaAttributeConverter
         return null;
     }
 
-
-    private boolean isJavaBasicTypes(String typeName) {
-        return GenerateUtils.BASIC_WRAPPER_TYPES.contains(typeName);
-    }
 }

@@ -39,7 +39,7 @@ public class DefaultMetaEntity implements MetaEntity {
     }
 
     protected final void init() {
-        this.metaModelGenContext.logMessage(Diagnostic.Kind.OTHER, "Initializing type " + getQualifiedName());
+        this.metaModelGenContext.logMessage(Diagnostic.Kind.NOTE, "Initializing type " + getQualifiedName());
 
         List<? extends Element> fieldsOfClass = ElementFilter.fieldsIn(element.getEnclosedElements());
         addPersistentMembers(fieldsOfClass, AccessType.FIELD);
@@ -47,6 +47,7 @@ public class DefaultMetaEntity implements MetaEntity {
         List<? extends Element> methodsOfClass = ElementFilter.methodsIn(element.getEnclosedElements());
         List<Element> gettersAndSettersOfClass = new ArrayList<>();
 
+        // 注解有可能在 getter setter 方法上，所以获取相应的getter setter
         for (Element rawMethodOfClass : methodsOfClass) {
             if (isGetterOrSetter(rawMethodOfClass)) {
                 gettersAndSettersOfClass.add(rawMethodOfClass);
@@ -56,9 +57,14 @@ public class DefaultMetaEntity implements MetaEntity {
     }
 
     private void addPersistentMembers(List<? extends Element> membersOfClass, AccessType accessType) {
+        //暂时不支持方法上注解
+        if (AccessType.PROPERTY.equals(accessType)) {
+            return;
+        }
+
         for (Element memberOfClass : membersOfClass) {
-            if (metaAttributeConverter.canConvert(memberOfClass, accessType)) {
-                metaModelGenContext.logMessage(Diagnostic.Kind.OTHER, "Starting convert " + this.element.toString() + " member: " + memberOfClass.getSimpleName());
+            if (!metaAttributeConverter.filter(memberOfClass)) {
+                metaModelGenContext.logMessage(Diagnostic.Kind.NOTE, "Starting convert " + this.element.toString() + " member: " + memberOfClass.getSimpleName());
                 //类型转换
                 MetaAttributeGenerationVisitor visitor = new MetaAttributeGenerationVisitor(metaModelGenContext, this, metaAttributeConverter);
                 MetaAttributeDescriptor result = memberOfClass.asType().accept(visitor, memberOfClass);
@@ -69,6 +75,11 @@ public class DefaultMetaEntity implements MetaEntity {
         }
     }
 
+    /**
+     * 判断是否getter setter方法
+     *
+     * @param methodOfClass
+     */
     private boolean isGetterOrSetter(Element methodOfClass) {
         ExecutableType methodType = (ExecutableType) methodOfClass.asType();
         String methodSimpleName = methodOfClass.getSimpleName().toString();
