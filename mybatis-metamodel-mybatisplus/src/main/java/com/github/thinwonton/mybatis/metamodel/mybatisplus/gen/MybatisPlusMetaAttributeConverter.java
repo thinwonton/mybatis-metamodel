@@ -1,18 +1,21 @@
-package com.github.thinwonton.mybatis.metamodel.mybatisplus;
+package com.github.thinwonton.mybatis.metamodel.mybatisplus.gen;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.github.thinwonton.mybatis.metamodel.core.gen.*;
 import com.github.thinwonton.mybatis.metamodel.core.util.GenerateUtils;
 import com.github.thinwonton.mybatis.metamodel.core.util.TypeUtils;
 
-import javax.lang.model.element.*;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.PrimitiveType;
 
 public class MybatisPlusMetaAttributeConverter implements MetaAttributeConverter {
 
     @Override
-    public boolean filter(Element memberOfClass) {
+    public boolean filter(MetaModelGenContext metaModelGenContext, Element memberOfClass) {
         //TableField注解标注为exist=false
         boolean isTableField = true;
         AnnotationMirror annotationMirror = GenerateUtils.getAnnotationMirror(memberOfClass, TableField.class.getCanonicalName());
@@ -46,19 +49,11 @@ public class MybatisPlusMetaAttributeConverter implements MetaAttributeConverter
         TypeElement returnedElement = (TypeElement) metaModelGenContext.getProcessingEnvironment().getTypeUtils().asElement(t);
         String typeName = returnedElement.getQualifiedName().toString();
 
-        //转换java基本Class类型
-        if (ElementKind.CLASS.equals(returnedElement.getKind())
-                && TypeUtils.isSimpleType(typeName)) {
-            return new DefaultMetaAttributeDescriptor(
-                    metaEntity,
-                    element,
-                    returnedElement.getQualifiedName().toString()
-            );
-        }
-
-        //TODO 处理 ENUM
-
-        return null;
+        return new DefaultMetaAttributeDescriptor(
+                metaEntity,
+                element,
+                typeName
+        );
     }
 
 }

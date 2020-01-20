@@ -90,7 +90,7 @@
                 <configuration>
                     <processors>
                         <processor>
-                            com.github.thinwonton.mybatis.metamodel.mybatisplus.MybatisPlusMetaModelGenProcessor
+                            com.github.thinwonton.mybatis.metamodel.mybatisplus.gen.MybatisPlusMetaModelGenProcessor
                         </processor>
                     </processors>
                     <options>

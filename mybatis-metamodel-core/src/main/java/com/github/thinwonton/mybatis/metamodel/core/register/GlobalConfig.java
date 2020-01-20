@@ -1,5 +1,6 @@
 package com.github.thinwonton.mybatis.metamodel.core.register;
 
+import com.github.thinwonton.mybatis.metamodel.core.gen.TKMapperConfig;
 import com.github.thinwonton.mybatis.metamodel.core.util.Style;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
@@ -26,6 +27,8 @@ public final class GlobalConfig {
      * 字段的转换方式
      */
     private Style style;
+
+    private final TKMapperConfig tkMapperConfig = new TKMapperConfig();
 
     /**
      * mybatis的 MappedStatement
@@ -66,5 +69,9 @@ public final class GlobalConfig {
 
     public void setStyle(Style style) {
         this.style = style;
+    }
+
+    public TKMapperConfig getTkMapperConfig() {
+        return tkMapperConfig;
     }
 }

@@ -63,7 +63,7 @@ public class DefaultMetaEntity implements MetaEntity {
         }
 
         for (Element memberOfClass : membersOfClass) {
-            if (!metaAttributeConverter.filter(memberOfClass)) {
+            if (!metaAttributeConverter.filter(metaModelGenContext, memberOfClass)) {
                 metaModelGenContext.logMessage(Diagnostic.Kind.NOTE, "Starting convert " + this.element.toString() + " member: " + memberOfClass.getSimpleName());
                 //类型转换
                 MetaAttributeGenerationVisitor visitor = new MetaAttributeGenerationVisitor(metaModelGenContext, this, metaAttributeConverter);

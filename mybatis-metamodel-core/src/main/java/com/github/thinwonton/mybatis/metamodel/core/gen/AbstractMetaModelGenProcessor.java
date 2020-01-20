@@ -19,8 +19,10 @@ public abstract class AbstractMetaModelGenProcessor extends AbstractProcessor {
     //打印processor日志的开关
     public static final String DEBUG_OPTION = "debug";
 
-    //仅用于TK MAPPER，原语类型的成员变量生效
+    //仅用于TK MAPPER
     public static final String USE_PRIMITIVE_TYPE_OPTION = "usePrimitiveType";
+    public static final String ENUM_AS_SIMPLE_TYPE_OPTION = "enumAsSimpleType";
+    public static final String USE_SIMPLE_TYPE_OPTION = "useSimpleType";
 
     private static final Boolean ALLOW_OTHER_PROCESSORS_TO_CLAIM_ANNOTATIONS = false;
 
@@ -48,6 +50,8 @@ public abstract class AbstractMetaModelGenProcessor extends AbstractProcessor {
         Set<String> options = new HashSet<>();
         options.add(DEBUG_OPTION);
         options.add(USE_PRIMITIVE_TYPE_OPTION);
+        options.add(ENUM_AS_SIMPLE_TYPE_OPTION);
+        options.add(USE_SIMPLE_TYPE_OPTION);
         return options;
     }
 

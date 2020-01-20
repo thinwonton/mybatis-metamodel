@@ -7,10 +7,12 @@ import javax.lang.model.type.PrimitiveType;
 public interface MetaAttributeConverter {
     /**
      * 是否过滤该member
+     *
+     * @param metaModelGenContext
      * @param memberOfClass
      * @return
      */
-    boolean filter(Element memberOfClass);
+    boolean filter(MetaModelGenContext metaModelGenContext, Element memberOfClass);
 
     MetaAttributeDescriptor visitPrimitive(MetaModelGenContext metaModelGenContext, MetaEntity metaEntity, PrimitiveType t, Element element);
 

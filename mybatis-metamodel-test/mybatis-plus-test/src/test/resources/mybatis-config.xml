@@ -32,6 +32,7 @@
     <mappers>
         <mapper class="com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.mapper.MusicMapper"/>
         <mapper class="com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.mapper.SpecSchemaSportMapper"/>
+        <mapper class="com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.mapper.ComplexEntityMapper"/>
     </mappers>
 
 </configuration>

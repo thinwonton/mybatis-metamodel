@@ -1,5 +1,6 @@
-package com.github.thinwonton.mybatis.metamodel.tkmapper;
+package com.github.thinwonton.mybatis.metamodel.tkmapper.register;
 
+import com.github.thinwonton.mybatis.metamodel.core.gen.TKMapperConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
 import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.Table;
@@ -82,11 +83,10 @@ public class TKMapperEntityResolver implements EntityResolver {
 
     @Override
     public Collection<TableField> resolveTableFields(GlobalConfig globalConfig, Table table, Class<?> entityClass) {
-        //TODO 处理getter setter里面的属性
         List<TableField> tableFields = new ArrayList<>();
         Field[] declaredFields = entityClass.getDeclaredFields();
         for (Field field : declaredFields) {
-            if (!filter(field)) {
+            if (!filter(globalConfig, field)) {
                 TableField tableField = resolveTableField(globalConfig, table, entityClass, field);
                 tableFields.add(tableField);
             }
@@ -94,17 +94,38 @@ public class TKMapperEntityResolver implements EntityResolver {
         return tableFields;
     }
 
-    private boolean filter(Field field) {
+    private boolean filter(GlobalConfig globalConfig, Field field) {
+        boolean shouldFilter = false;
         //排除 static，Transient
         //排除 @javax.persistence.Transient 注释
-        //只接受基本包装类
         if (Modifier.isStatic(field.getModifiers())
                 || Modifier.isTransient(field.getModifiers())
-                || field.isAnnotationPresent(Transient.class)
-                || !SimpleTypeUtil.isSimpleType(field.getType())) {
-            return true;
+                || field.isAnnotationPresent(Transient.class)) {
+            shouldFilter = true;
         }
-        return false;
+
+        TKMapperConfig mapperConfig = globalConfig.getTkMapperConfig();
+
+        //不开启UseSimpleType,也不添加注解，忽略
+        if (!mapperConfig.isUseSimpleType()
+                && !field.isAnnotationPresent(Column.class)
+                && !field.isAnnotationPresent(ColumnType.class)) {
+            shouldFilter = true;
+        }
+
+        //加上其他类型的判断条件
+        //开启UseSimpleType，但是不是simple type或者不满足enum条件，忽略
+        if (mapperConfig.isUseSimpleType()
+                && !field.isAnnotationPresent(Column.class)
+                && !field.isAnnotationPresent(ColumnType.class)
+                && !(
+                SimpleTypeUtil.isSimpleType(field.getType())
+                        || (mapperConfig.isEnumAsSimpleType() && Enum.class.isAssignableFrom(field.getType())))
+        ) {
+            shouldFilter = true;
+        }
+
+        return shouldFilter;
     }
 
     @Override

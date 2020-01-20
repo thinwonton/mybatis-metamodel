@@ -1,5 +1,6 @@
-package com.github.thinwonton.mybatis.metamodel.tkmapper;
+package com.github.thinwonton.mybatis.metamodel.tkmapper.register;
 
+import com.github.thinwonton.mybatis.metamodel.core.gen.TKMapperConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfigFactory;
 import com.github.thinwonton.mybatis.metamodel.core.util.Style;
@@ -8,6 +9,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
 import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
+import tk.mybatis.mapper.util.SimpleTypeUtil;
 
 import java.util.ArrayList;
 
@@ -27,7 +29,7 @@ public class TKMapperGlobalConfigFactory implements GlobalConfigFactory {
         this(mybatisConfig, mapperHelper.getConfig());
     }
 
-    private void init(Configuration mybatisConfig, Config tkMapperConfig) {
+    private void init(Configuration mybatisConfig, Config externalMapperConfig) {
 
         //mappedStatements
         for (Object object : new ArrayList<Object>(mybatisConfig.getMappedStatements())) {
@@ -38,11 +40,19 @@ public class TKMapperGlobalConfigFactory implements GlobalConfigFactory {
         }
 
         // 全局的catalog 和 schema
-        globalConfig.setCatalog(tkMapperConfig.getCatalog());
-        globalConfig.setSchema(tkMapperConfig.getSchema());
+        globalConfig.setCatalog(externalMapperConfig.getCatalog());
+        globalConfig.setSchema(externalMapperConfig.getSchema());
 
         // style
-        globalConfig.setStyle(Utils.transform(tkMapperConfig.getStyle()));
+        globalConfig.setStyle(Utils.transform(externalMapperConfig.getStyle()));
+
+        TKMapperConfig internalMapperConfig = globalConfig.getTkMapperConfig();
+
+        //通过查找是否有原语类型，判断是否支持原语
+        boolean usePrimitiveType = SimpleTypeUtil.isSimpleType(boolean.class);
+        internalMapperConfig.setUsePrimitiveType(usePrimitiveType);
+
+        internalMapperConfig.setEnumAsSimpleType(externalMapperConfig.isEnumAsSimpleType());
 
     }
 

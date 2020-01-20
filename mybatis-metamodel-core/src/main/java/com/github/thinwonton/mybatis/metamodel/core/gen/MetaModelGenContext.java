@@ -18,10 +18,7 @@ public final class MetaModelGenContext {
 
     private boolean logDebug = false;
 
-    /**
-     * 仅仅在tk mapper中生效
-     */
-    private boolean usePrimitiveType = false;
+    private TKMapperConfig tkMapperConfig = new TKMapperConfig();
 
     /**
      * 已经解析的orm entity
@@ -38,7 +35,20 @@ public final class MetaModelGenContext {
 
     private void config() {
         logDebug = Boolean.parseBoolean(processingEnvironment.getOptions().get(AbstractMetaModelGenProcessor.DEBUG_OPTION));
-        usePrimitiveType = Boolean.parseBoolean(processingEnvironment.getOptions().get(AbstractMetaModelGenProcessor.USE_PRIMITIVE_TYPE_OPTION));
+        boolean usePrimitiveType = Boolean.parseBoolean(processingEnvironment.getOptions().get(AbstractMetaModelGenProcessor.USE_PRIMITIVE_TYPE_OPTION));
+        boolean enumAsSimpleType = Boolean.parseBoolean(processingEnvironment.getOptions().get(AbstractMetaModelGenProcessor.ENUM_AS_SIMPLE_TYPE_OPTION));
+
+        tkMapperConfig.setUsePrimitiveType(usePrimitiveType);
+        tkMapperConfig.setEnumAsSimpleType(enumAsSimpleType);
+
+        // useSimpleTypeOption默认为true
+        String useSimpleTypeOption = processingEnvironment.getOptions().get(AbstractMetaModelGenProcessor.USE_SIMPLE_TYPE_OPTION);
+        if (useSimpleTypeOption != null && (useSimpleTypeOption.toLowerCase().equals("true") || useSimpleTypeOption.toLowerCase().equals("false"))) {
+            tkMapperConfig.setUseSimpleType(Boolean.parseBoolean(useSimpleTypeOption));
+        } else {
+            tkMapperConfig.setUseSimpleType(true);
+        }
+
     }
 
     public void logMessage(Diagnostic.Kind type, String message) {
@@ -76,7 +86,7 @@ public final class MetaModelGenContext {
         return processingEnvironment;
     }
 
-    public boolean isUsePrimitiveType() {
-        return usePrimitiveType;
+    public TKMapperConfig getTkMapperConfig() {
+        return tkMapperConfig;
     }
 }

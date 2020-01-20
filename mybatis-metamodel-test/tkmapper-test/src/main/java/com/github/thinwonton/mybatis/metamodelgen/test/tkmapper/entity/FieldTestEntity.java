@@ -26,6 +26,8 @@ public class FieldTestEntity {
 
     private long age;
 
+    private State state;
+
     public Long getId() {
         return id;
     }
@@ -48,5 +50,13 @@ public class FieldTestEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 }

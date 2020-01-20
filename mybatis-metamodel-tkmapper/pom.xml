@@ -26,13 +26,13 @@
         <dependency>
             <groupId>tk.mybatis</groupId>
             <artifactId>mapper-core</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

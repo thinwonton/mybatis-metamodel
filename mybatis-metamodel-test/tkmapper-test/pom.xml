@@ -100,7 +100,7 @@
                 <configuration>
                     <processors>
                         <processor>
-                            com.github.thinwonton.mybatis.metamodel.tkmapper.TKMapperMetaModelGenProcessor
+                            com.github.thinwonton.mybatis.metamodel.tkmapper.gen.TKMapperMetaModelGenProcessor
                         </processor>
                     </processors>
                     <options>

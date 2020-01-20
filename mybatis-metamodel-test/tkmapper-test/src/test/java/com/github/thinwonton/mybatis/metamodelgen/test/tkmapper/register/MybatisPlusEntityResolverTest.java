@@ -1,8 +1,7 @@
 package com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.register;
 
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
-import com.github.thinwonton.mybatis.metamodel.tkmapper.TKMapperEntityResolver;
-import com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.TKMapperTestBase;
+import com.github.thinwonton.mybatis.metamodel.tkmapper.register.TKMapperEntityResolver;
 import com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.entity.Music;
 import com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.mapper.MusicMapper;
 import org.apache.ibatis.mapping.MappedStatement;

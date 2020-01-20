@@ -1,4 +1,4 @@
-package com.github.thinwonton.mybatis.metamodel.mybatisplus;
+package com.github.thinwonton.mybatis.metamodel.mybatisplus.register;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;

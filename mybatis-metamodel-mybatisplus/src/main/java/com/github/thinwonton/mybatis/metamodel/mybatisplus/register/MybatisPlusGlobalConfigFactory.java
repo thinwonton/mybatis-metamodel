@@ -1,4 +1,4 @@
-package com.github.thinwonton.mybatis.metamodel.mybatisplus;
+package com.github.thinwonton.mybatis.metamodel.mybatisplus.register;
 
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
