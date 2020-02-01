@@ -1,5 +1,6 @@
 package com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.register;
 
+import com.github.thinwonton.mybatis.metamodel.core.TKMapperConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
 import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.MetaModelContext;
@@ -138,8 +139,11 @@ public class TKMapperMetaModelTest extends TKMapperTestBase {
         GlobalConfig globalConfig = metaModelContext.getGlobalConfig();
         Assert.assertNotNull(globalConfig);
 
-        Assert.assertEquals(GLOBAL_SCHEMA_NAME, globalConfig.getSchema());
-        Assert.assertEquals(GLOBAL_CATALOG_NAME, globalConfig.getCatalog());
+        TKMapperConfig tkMapperConfig = globalConfig.getTkMapperConfig();
+        Assert.assertNotNull(tkMapperConfig);
+
+        Assert.assertEquals(GLOBAL_SCHEMA_NAME, tkMapperConfig.getSchema());
+        Assert.assertEquals(GLOBAL_CATALOG_NAME, tkMapperConfig.getCatalog());
 
         Table musicTable = metaModelContext.getTable(Music_.class);
         Assert.assertNotNull(musicTable);

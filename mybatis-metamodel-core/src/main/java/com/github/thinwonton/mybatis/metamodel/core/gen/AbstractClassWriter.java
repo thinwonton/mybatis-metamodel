@@ -9,7 +9,7 @@ import javax.lang.model.element.TypeElement;
 import java.io.PrintWriter;
 import java.util.List;
 
-public class AbstractClassWriter implements ClassWriter {
+public abstract class AbstractClassWriter implements ClassWriter {
     @Override
     public void printGeneratedAnnotation(MetaModelGenContext metaModelGenContext, MetaEntity metaEntity, PrintWriter pw) {
         StringBuilder generatedAnnotation = new StringBuilder();

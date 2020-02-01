@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.mapper.Mapper;
-import com.baomidou.mybatisplus.core.toolkit.Assert;
+import com.github.thinwonton.mybatis.metamodel.core.MybatisPlusConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
 import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.Table;
@@ -52,6 +52,8 @@ public class MybatisPlusEntityResolver implements EntityResolver {
 
     @Override
     public String resolveSimpleTableName(GlobalConfig globalConfig, Class<?> entityClass) {
+        MybatisPlusConfig mybatisPlusConfig = globalConfig.getMybatisPlusConfig();
+
         String tableName = null;
         if (entityClass.isAnnotationPresent(TableName.class)) {
             TableName tableNameAnnotation = entityClass.getAnnotation(TableName.class);
@@ -63,7 +65,7 @@ public class MybatisPlusEntityResolver implements EntityResolver {
         if (StringUtils.isEmpty(tableName)) {
             tableName = entityClass.getSimpleName();
             // 根据全局配置转换获取表名
-            tableName = StringUtils.transform(tableName, globalConfig.getStyle());
+            tableName = StringUtils.transform(tableName, mybatisPlusConfig.getStyle());
         }
         return tableName;
     }
@@ -90,8 +92,9 @@ public class MybatisPlusEntityResolver implements EntityResolver {
             catalogSchemaInfo.setSchema(table.schema());
         }
 
-        catalogSchemaInfo.setGlobalCatalog(globalConfig.getCatalog());
-        catalogSchemaInfo.setGlobalSchema(globalConfig.getSchema());
+        MybatisPlusConfig mybatisPlusConfig = globalConfig.getMybatisPlusConfig();
+
+        catalogSchemaInfo.setGlobalSchema(mybatisPlusConfig.getSchema());
 
         return catalogSchemaInfo;
     }
@@ -142,6 +145,7 @@ public class MybatisPlusEntityResolver implements EntityResolver {
     }
 
     private String getColumnName(GlobalConfig globalConfig, Field field, boolean isIdColumn) {
+        MybatisPlusConfig mybatisPlusConfig = globalConfig.getMybatisPlusConfig();
 
         String columnName;
         if (isIdColumn) {
@@ -151,7 +155,7 @@ public class MybatisPlusEntityResolver implements EntityResolver {
                 columnName = tableIdAnnotation.value();
             } else {
                 columnName = field.getName();
-                columnName = StringUtils.transform(columnName, globalConfig.getStyle());
+                columnName = StringUtils.transform(columnName, mybatisPlusConfig.getStyle());
             }
         } else {
             //处理非ID列
@@ -160,7 +164,7 @@ public class MybatisPlusEntityResolver implements EntityResolver {
                 columnName = tableFieldAnnotation.value();
             } else {
                 columnName = field.getName();
-                columnName = StringUtils.transform(columnName, globalConfig.getStyle());
+                columnName = StringUtils.transform(columnName, mybatisPlusConfig.getStyle());
             }
         }
         return columnName;

@@ -1,9 +1,8 @@
 package com.github.thinwonton.mybatis.metamodel.tkmapper.register;
 
-import com.github.thinwonton.mybatis.metamodel.core.gen.TKMapperConfig;
+import com.github.thinwonton.mybatis.metamodel.core.TKMapperConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfigFactory;
-import com.github.thinwonton.mybatis.metamodel.core.util.Style;
 import com.github.thinwonton.mybatis.metamodel.tkmapper.util.Utils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.session.Configuration;
@@ -39,12 +38,14 @@ public class TKMapperGlobalConfigFactory implements GlobalConfigFactory {
             }
         }
 
+        TKMapperConfig internalTKMapperConfig = globalConfig.getTkMapperConfig();
+
         // 全局的catalog 和 schema
-        globalConfig.setCatalog(externalMapperConfig.getCatalog());
-        globalConfig.setSchema(externalMapperConfig.getSchema());
+        internalTKMapperConfig.setCatalog(externalMapperConfig.getCatalog());
+        internalTKMapperConfig.setSchema(externalMapperConfig.getSchema());
 
         // style
-        globalConfig.setStyle(Utils.transform(externalMapperConfig.getStyle()));
+        internalTKMapperConfig.setStyle(Utils.transform(externalMapperConfig.getStyle()));
 
         TKMapperConfig internalMapperConfig = globalConfig.getTkMapperConfig();
 

@@ -1,10 +1,9 @@
 package com.github.thinwonton.mybatis.metamodel.mybatisplus.register;
 
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.github.thinwonton.mybatis.metamodel.core.MybatisPlusConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfigFactory;
-import com.github.thinwonton.mybatis.metamodel.core.util.Style;
 import com.github.thinwonton.mybatis.metamodel.mybatisplus.util.Utils;
 import org.apache.ibatis.mapping.MappedStatement;
 
@@ -27,14 +26,14 @@ public class MybatisPlusGlobalConfigFactory implements GlobalConfigFactory {
             }
         }
 
-        com.baomidou.mybatisplus.core.config.GlobalConfig mybatisPlusConfig = mybatisConfiguration.getGlobalConfig();
+        //mybatis plus 的配置
+        MybatisPlusConfig internalMybatisPlusConfig = globalConfig.getMybatisPlusConfig();
+        com.baomidou.mybatisplus.core.config.GlobalConfig.DbConfig dbConfig = mybatisConfiguration.getGlobalConfig().getDbConfig();
 
-        // 全局的 catalog 和 schema
-        com.baomidou.mybatisplus.core.config.GlobalConfig.DbConfig dbConfig = mybatisPlusConfig.getDbConfig();
-        globalConfig.setSchema(dbConfig.getSchema());
+        internalMybatisPlusConfig.setSchema(dbConfig.getSchema());
 
         //style
-        globalConfig.setStyle(Utils.getStyle(dbConfig));
+        internalMybatisPlusConfig.setStyle(Utils.getStyle(dbConfig));
     }
 
     @Override

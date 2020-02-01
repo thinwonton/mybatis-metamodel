@@ -1,6 +1,6 @@
 package com.github.thinwonton.mybatis.metamodel.tkmapper.register;
 
-import com.github.thinwonton.mybatis.metamodel.core.gen.TKMapperConfig;
+import com.github.thinwonton.mybatis.metamodel.core.TKMapperConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
 import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.Table;
@@ -11,12 +11,10 @@ import com.github.thinwonton.mybatis.metamodel.core.util.Style;
 import com.github.thinwonton.mybatis.metamodel.tkmapper.util.Utils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.UnknownTypeHandler;
 import tk.mybatis.mapper.annotation.ColumnType;
 import tk.mybatis.mapper.annotation.NameStyle;
 import tk.mybatis.mapper.annotation.RegisterMapper;
 import tk.mybatis.mapper.util.SimpleTypeUtil;
-import tk.mybatis.mapper.util.StringUtil;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -65,9 +63,11 @@ public class TKMapperEntityResolver implements EntityResolver {
             }
         }
 
+        TKMapperConfig tkMapperConfig = globalConfig.getTkMapperConfig();
+
         if (StringUtils.isEmpty(tableName)) {
             //style，NameStyle 注解优先于全局配置
-            Style style = globalConfig.getStyle();
+            Style style = tkMapperConfig.getStyle();
             if (entityClass.isAnnotationPresent(NameStyle.class)) {
                 NameStyle nameStyle = entityClass.getAnnotation(NameStyle.class);
                 style = Utils.transform(nameStyle.value());
@@ -140,8 +140,10 @@ public class TKMapperEntityResolver implements EntityResolver {
             }
         }
 
-        catalogSchemaInfo.setGlobalCatalog(globalConfig.getCatalog());
-        catalogSchemaInfo.setGlobalSchema(globalConfig.getSchema());
+        TKMapperConfig tkMapperConfig = globalConfig.getTkMapperConfig();
+
+        catalogSchemaInfo.setGlobalCatalog(tkMapperConfig.getCatalog());
+        catalogSchemaInfo.setGlobalSchema(tkMapperConfig.getSchema());
         return catalogSchemaInfo;
     }
 
@@ -181,7 +183,9 @@ public class TKMapperEntityResolver implements EntityResolver {
     }
 
     private String getColumnName(GlobalConfig globalConfig, Class<?> entityClass, Field field) {
-        Style style = globalConfig.getStyle();
+        TKMapperConfig tkMapperConfig = globalConfig.getTkMapperConfig();
+
+        Style style = tkMapperConfig.getStyle();
         //style，该注解优先于全局配置
         if (entityClass.isAnnotationPresent(NameStyle.class)) {
             NameStyle nameStyle = entityClass.getAnnotation(NameStyle.class);

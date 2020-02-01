@@ -1,6 +1,7 @@
 package com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.register;
 
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
+import com.github.thinwonton.mybatis.metamodel.core.MybatisPlusConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
 import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.MetaModelContext;
@@ -122,7 +123,10 @@ public class MybatisPlusMetaModelTest extends MybatisPlusTestBase {
         GlobalConfig globalConfig = metaModelContext.getGlobalConfig();
         Assert.assertNotNull(globalConfig);
 
-        Assert.assertEquals(GLOBAL_SCHEMA_NAME, globalConfig.getSchema());
+        MybatisPlusConfig mybatisPlusConfig = globalConfig.getMybatisPlusConfig();
+        Assert.assertNotNull(mybatisPlusConfig);
+
+        Assert.assertEquals(GLOBAL_SCHEMA_NAME, mybatisPlusConfig.getSchema());
 
         Table musicTable = metaModelContext.getTable(Music_.class);
         Assert.assertNotNull(musicTable);

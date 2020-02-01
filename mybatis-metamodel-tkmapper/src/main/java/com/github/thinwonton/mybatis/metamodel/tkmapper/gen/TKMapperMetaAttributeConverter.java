@@ -1,5 +1,6 @@
 package com.github.thinwonton.mybatis.metamodel.tkmapper.gen;
 
+import com.github.thinwonton.mybatis.metamodel.core.TKMapperConfig;
 import com.github.thinwonton.mybatis.metamodel.core.gen.*;
 import com.github.thinwonton.mybatis.metamodel.core.util.GenerateUtils;
 import com.github.thinwonton.mybatis.metamodel.core.util.TypeUtils;

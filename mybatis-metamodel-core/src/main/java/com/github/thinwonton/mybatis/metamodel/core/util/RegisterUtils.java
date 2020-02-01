@@ -4,9 +4,6 @@ import com.github.thinwonton.mybatis.metamodel.core.exception.MetaModelRegisterE
 
 /**
  * RegisterUtils
- *
- * @author hugo
- * @date 2020/1/5
  */
 public class RegisterUtils {
 

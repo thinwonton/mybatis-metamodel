@@ -1,5 +1,7 @@
 package com.github.thinwonton.mybatis.metamodel.core.gen;
 
+import com.github.thinwonton.mybatis.metamodel.core.TKMapperConfig;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.tools.Diagnostic;
