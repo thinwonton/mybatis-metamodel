@@ -2,8 +2,8 @@ package com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.sample;
 
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
 import com.github.thinwonton.mybatis.metamodel.core.register.MetaModelContext;
-import com.github.thinwonton.mybatis.metamodel.tkmapper.register.TKMapperEntityResolver;
-import com.github.thinwonton.mybatis.metamodel.tkmapper.register.TKMapperGlobalConfigFactory;
+import com.github.thinwonton.mybatis.metamodel.tkmapper.processor.register.TKMapperEntityResolver;
+import com.github.thinwonton.mybatis.metamodel.tkmapper.processor.register.TKMapperGlobalConfigFactory;
 import com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.MetaModelContextHolder;
 import com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.TKMapperTestBase;
 import com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.entity.State;

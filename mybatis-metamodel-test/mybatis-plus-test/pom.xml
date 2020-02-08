@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>com.github.thinwonton.mybatismetamodel</groupId>
-            <artifactId>mybatis-metamodel-mybatisplus</artifactId>
+            <artifactId>mybatisplus</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -90,7 +90,7 @@
                 <configuration>
                     <processors>
                         <processor>
-                            com.github.thinwonton.mybatis.metamodel.mybatisplus.gen.MybatisPlusMetaModelGenProcessor
+                            com.github.thinwonton.mybatis.metamodel.mybatisplus.processor.gen.MybatisPlusMetaModelGenProcessor
                         </processor>
                     </processors>
                     <options>

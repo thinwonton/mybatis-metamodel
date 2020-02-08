@@ -1,6 +1,6 @@
 package com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.register;
 
-import com.github.thinwonton.mybatis.metamodel.mybatisplus.register.MybatisPlusEntityResolver;
+import com.github.thinwonton.mybatis.metamodel.mybatisplus.processor.register.MybatisPlusEntityResolver;
 import com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.entity.Music;
 import com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.mapper.MusicMapper;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -11,8 +11,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import static org.mockito.Mockito.mock;
 
 /**
  * MybatisPlusEntityResolverTest

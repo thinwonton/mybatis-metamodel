@@ -44,10 +44,8 @@
     </properties>
 
     <modules>
-        <module>mybatis-metamodel-core</module>
-        <module>mybatis-metamodel-tkmapper</module>
-        <module>mybatis-metamodel-mybatisplus</module>
-
+        <module>core</module>
+        <module>annotation-processor</module>
         <module>mybatis-metamodel-test</module>
     </modules>
 
