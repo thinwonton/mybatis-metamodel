@@ -31,9 +31,7 @@ public class TKMapperMetaModelTest extends TKMapperTestBase {
     private String GLOBAL_CATALOG_NAME = "global_catalog";
 
     @Override
-    public void setup() {
-        super.setup();
-
+    protected void initInternal() {
         Configuration configuration = getSqlSessionFactory().getConfiguration();
         EntityResolver entityResolver = new TKMapperEntityResolver();
         metaModelContext = new MetaModelContext(

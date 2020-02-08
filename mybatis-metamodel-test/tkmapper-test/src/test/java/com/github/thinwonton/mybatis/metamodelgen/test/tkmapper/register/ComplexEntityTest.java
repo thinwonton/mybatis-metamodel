@@ -24,9 +24,7 @@ public class ComplexEntityTest extends TKMapperTestBase {
     private MetaModelContext metaModelContext;
 
     @Override
-    public void setup() {
-        super.setup();
-
+    protected void initInternal() {
         Configuration configuration = getSqlSessionFactory().getConfiguration();
         EntityResolver entityResolver = new TKMapperEntityResolver();
         metaModelContext = new MetaModelContext(

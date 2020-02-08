@@ -39,6 +39,9 @@
         <!--测试field-->
         <mapper class="com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.mapper.FieldTestEntityMapper"/>
         <mapper class="com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.mapper.ComplexEntityMapper"/>
+
+        <!--sample-->
+        <mapper class="com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.mapper.UserInfoMapper"/>
     </mappers>
 
 </configuration>

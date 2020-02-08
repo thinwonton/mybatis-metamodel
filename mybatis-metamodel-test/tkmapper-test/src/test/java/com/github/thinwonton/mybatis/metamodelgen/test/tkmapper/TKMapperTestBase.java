@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TKMapperTestBase {
     private SqlSessionFactory sqlSessionFactory;
@@ -32,10 +34,19 @@ public class TKMapperTestBase {
             //配置通用 Mapper
             configMapperHelper();
             //执行初始化 SQL
-            runSql(getSqlFileAsReader());
+            List<Reader> sqlFiles = getSqlFilesAsReader();
+            for (Reader sqlFile : sqlFiles) {
+                runSql(sqlFile);
+            }
+
+            initInternal();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+    }
+
+    protected void initInternal() {
 
     }
 
@@ -74,14 +85,21 @@ public class TKMapperTestBase {
         return Resources.getResourceAsReader("mybatis-config.xml");
     }
 
+
     /**
-     * 获取初始化 sql
+     * 获取初始化 sql 脚本
      *
      * @return
      */
-    protected Reader getSqlFileAsReader() throws IOException {
-        return Resources.getResourceAsReader("db.sql");
+    protected List<Reader> getSqlFilesAsReader() throws IOException {
+        Reader schemaReader = Resources.getResourceAsReader("schema.sql");
+        Reader dataReader = Resources.getResourceAsReader("data.sql");
+        List<Reader> list = new ArrayList<>();
+        list.add(schemaReader);
+        list.add(dataReader);
+        return list;
     }
+
 
     protected SqlSessionFactory getSqlSessionFactory() {
         return sqlSessionFactory;
