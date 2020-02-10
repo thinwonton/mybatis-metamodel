@@ -18,6 +18,7 @@
 
         <!--mybatis-->
         <mybatis.version>3.5.3</mybatis.version>
+        <mybatis-spring.version>2.0.3</mybatis-spring.version>
 
         <!--log-->
         <slf4j.version>1.7.25</slf4j.version>
@@ -35,6 +36,12 @@
         <mockito.version>2.28.2</mockito.version>
         <powermock.version>2.0.4</powermock.version>
 
+        <!--spring-->
+        <spring.version>5.1.10.RELEASE</spring.version>
+
+        <!--springboot-->
+        <spingboot.version>2.1.9.RELEASE</spingboot.version>
+
         <!--   tkmapper     -->
         <jpa.version>1.0</jpa.version>
         <tkmapper-module.version>1.1.5</tkmapper-module.version>
@@ -46,6 +53,7 @@
     <modules>
         <module>core</module>
         <module>annotation-processor</module>
+        <module>spring</module>
         <module>mybatis-metamodel-test</module>
     </modules>
 
@@ -69,6 +77,11 @@
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis</artifactId>
                 <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis-spring.version}</version>
             </dependency>
 
             <!--mybatis-plus-->
@@ -99,6 +112,11 @@
                 <artifactId>mapper-base</artifactId>
                 <version>${tkmapper-module.version}</version>
             </dependency>
+            <dependency>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper-spring</artifactId>
+                <version>${tkmapper-module.version}</version>
+            </dependency>
 
             <!--lombok-->
             <dependency>
@@ -106,6 +124,26 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
             </dependency>
+
+            <!--spring-->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <!--springboot-->
 
             <!--log-->
             <dependency>

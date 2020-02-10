@@ -1,5 +1,7 @@
 package com.github.thinwonton.mybatis.metamodel.core.util;
 
+import java.lang.reflect.Field;
+
 /**
  * ReflectionUtils
  *
@@ -15,4 +17,13 @@ public class ReflectionUtils {
         }
         return null;
     }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getProperty(Object object, String propertyName) throws NoSuchFieldException, IllegalAccessException {
+        Class<?> c = object.getClass();
+        Field propertyField = c.getDeclaredField(propertyName); //获取属性study1中的属性a
+        propertyField.setAccessible(true);//设置a属性的访问权限，保证private属性的访问
+        return (T) propertyField.get(object);
+    }
+
 }

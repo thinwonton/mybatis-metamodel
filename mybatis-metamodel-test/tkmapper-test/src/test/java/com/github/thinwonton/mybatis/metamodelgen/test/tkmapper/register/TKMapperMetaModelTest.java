@@ -1,16 +1,12 @@
 package com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.register;
 
 import com.github.thinwonton.mybatis.metamodel.core.TKMapperConfig;
-import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
-import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
-import com.github.thinwonton.mybatis.metamodel.core.register.MetaModelContext;
-import com.github.thinwonton.mybatis.metamodel.core.register.Table;
+import com.github.thinwonton.mybatis.metamodel.core.register.*;
 import com.github.thinwonton.mybatis.metamodel.core.util.StringUtils;
 import com.github.thinwonton.mybatis.metamodel.tkmapper.processor.register.TKMapperEntityResolver;
 import com.github.thinwonton.mybatis.metamodel.tkmapper.processor.register.TKMapperGlobalConfigFactory;
 import com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.TKMapperTestBase;
 import com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.entity.*;
-import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,10 +28,9 @@ public class TKMapperMetaModelTest extends TKMapperTestBase {
 
     @Override
     protected void initInternal() {
-        Configuration configuration = getSqlSessionFactory().getConfiguration();
         EntityResolver entityResolver = new TKMapperEntityResolver();
-        metaModelContext = new MetaModelContext(
-                new TKMapperGlobalConfigFactory(configuration, getMapperHelper()),
+        metaModelContext = new MetaModelContextImpl(
+                new TKMapperGlobalConfigFactory(getSqlSessionFactory(), getMapperHelper()),
                 entityResolver);
     }
 

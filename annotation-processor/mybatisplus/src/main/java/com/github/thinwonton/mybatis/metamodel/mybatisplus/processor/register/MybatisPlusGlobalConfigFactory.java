@@ -15,9 +15,14 @@ import java.util.ArrayList;
 public class MybatisPlusGlobalConfigFactory implements GlobalConfigFactory {
 
     private GlobalConfig globalConfig = new GlobalConfig();
+    private MybatisConfiguration mybatisConfiguration;
 
     public MybatisPlusGlobalConfigFactory(MybatisConfiguration mybatisConfiguration) {
+        this.mybatisConfiguration = mybatisConfiguration;
+        init();
+    }
 
+    private void init() {
         //mappedStatements
         for (Object object : new ArrayList<Object>(mybatisConfiguration.getMappedStatements())) {
             if (object instanceof MappedStatement) {
@@ -34,10 +39,17 @@ public class MybatisPlusGlobalConfigFactory implements GlobalConfigFactory {
 
         //style
         internalMybatisPlusConfig.setStyle(Utils.getStyle(dbConfig));
+
     }
 
     @Override
     public GlobalConfig getGlobalConfig() {
         return this.globalConfig;
+    }
+
+    @Override
+    public void refresh() {
+        globalConfig = new GlobalConfig();
+        init();
     }
 }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
 import com.github.thinwonton.mybatis.metamodel.core.register.MetaModelContext;
+import com.github.thinwonton.mybatis.metamodel.core.register.MetaModelContextImpl;
 import com.github.thinwonton.mybatis.metamodel.mybatisplus.processor.register.MybatisPlusEntityResolver;
 import com.github.thinwonton.mybatis.metamodel.mybatisplus.processor.register.MybatisPlusGlobalConfigFactory;
 import com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.MetaModelContextHolder;
@@ -46,7 +47,7 @@ public class MybatisPlusSampleTest extends MybatisPlusTestBase {
     protected void initInternal() {
         MybatisConfiguration configuration = (MybatisConfiguration) getSqlSessionFactory().getConfiguration();
         EntityResolver entityResolver = new MybatisPlusEntityResolver();
-        MetaModelContext metaModelContext = new MetaModelContext(
+        MetaModelContext metaModelContext = new MetaModelContextImpl(
                 new MybatisPlusGlobalConfigFactory(configuration),
                 entityResolver);
         //单例

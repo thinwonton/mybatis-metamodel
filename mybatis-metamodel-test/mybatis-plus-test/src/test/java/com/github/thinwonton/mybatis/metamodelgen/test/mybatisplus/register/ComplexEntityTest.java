@@ -3,6 +3,7 @@ package com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.register;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
 import com.github.thinwonton.mybatis.metamodel.core.register.MetaModelContext;
+import com.github.thinwonton.mybatis.metamodel.core.register.MetaModelContextImpl;
 import com.github.thinwonton.mybatis.metamodel.core.register.Table;
 import com.github.thinwonton.mybatis.metamodel.mybatisplus.processor.register.MybatisPlusEntityResolver;
 import com.github.thinwonton.mybatis.metamodel.mybatisplus.processor.register.MybatisPlusGlobalConfigFactory;
@@ -35,7 +36,7 @@ public class ComplexEntityTest extends MybatisPlusTestBase {
         super.setup();
         MybatisConfiguration configuration = (MybatisConfiguration) getSqlSessionFactory().getConfiguration();
         EntityResolver entityResolver = new MybatisPlusEntityResolver();
-        metaModelContext = new MetaModelContext(
+        metaModelContext = new MetaModelContextImpl(
                 new MybatisPlusGlobalConfigFactory(configuration),
                 entityResolver);
     }

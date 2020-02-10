@@ -2,6 +2,7 @@ package com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.sample;
 
 import com.github.thinwonton.mybatis.metamodel.core.register.EntityResolver;
 import com.github.thinwonton.mybatis.metamodel.core.register.MetaModelContext;
+import com.github.thinwonton.mybatis.metamodel.core.register.MetaModelContextImpl;
 import com.github.thinwonton.mybatis.metamodel.tkmapper.processor.register.TKMapperEntityResolver;
 import com.github.thinwonton.mybatis.metamodel.tkmapper.processor.register.TKMapperGlobalConfigFactory;
 import com.github.thinwonton.mybatis.metamodelgen.test.tkmapper.MetaModelContextHolder;
@@ -42,10 +43,9 @@ public class TKMapperSampleTest extends TKMapperTestBase {
 
     @Override
     protected void initInternal() {
-        Configuration configuration = getSqlSessionFactory().getConfiguration();
         EntityResolver entityResolver = new TKMapperEntityResolver();
-        MetaModelContext metaModelContext = new MetaModelContext(
-                new TKMapperGlobalConfigFactory(configuration, getMapperHelper()),
+        MetaModelContext metaModelContext = new MetaModelContextImpl(
+                new TKMapperGlobalConfigFactory(getSqlSessionFactory(), getMapperHelper()),
                 entityResolver);
         //单例
         MetaModelContextHolder.setup(metaModelContext);

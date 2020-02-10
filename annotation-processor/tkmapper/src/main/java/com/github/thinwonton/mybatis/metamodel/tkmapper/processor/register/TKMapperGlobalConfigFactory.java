@@ -5,7 +5,7 @@ import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfig;
 import com.github.thinwonton.mybatis.metamodel.core.register.GlobalConfigFactory;
 import com.github.thinwonton.mybatis.metamodel.tkmapper.processor.util.Utils;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSessionFactory;
 import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
 import tk.mybatis.mapper.util.SimpleTypeUtil;
@@ -19,19 +19,22 @@ public class TKMapperGlobalConfigFactory implements GlobalConfigFactory {
 
     private GlobalConfig globalConfig = new GlobalConfig();
 
+    private SqlSessionFactory sqlSessionFactory;
+    private MapperHelper mapperHelper;
 
-    public TKMapperGlobalConfigFactory(Configuration mybatisConfig, Config tkMapperConfig) {
-        init(mybatisConfig, tkMapperConfig);
+    public TKMapperGlobalConfigFactory(SqlSessionFactory sqlSessionFactory, MapperHelper mapperHelper) {
+        this.mapperHelper = mapperHelper;
+        this.sqlSessionFactory = sqlSessionFactory;
+        init();
     }
 
-    public TKMapperGlobalConfigFactory(Configuration mybatisConfig, MapperHelper mapperHelper) {
-        this(mybatisConfig, mapperHelper.getConfig());
-    }
+    private void init() {
 
-    private void init(Configuration mybatisConfig, Config externalMapperConfig) {
+        //获取tkmapper config
+        Config mapperConfig = mapperHelper.getConfig();
 
         //mappedStatements
-        for (Object object : new ArrayList<Object>(mybatisConfig.getMappedStatements())) {
+        for (Object object : new ArrayList<Object>(sqlSessionFactory.getConfiguration().getMappedStatements())) {
             if (object instanceof MappedStatement) {
                 MappedStatement ms = (MappedStatement) object;
                 globalConfig.addMappedStatement(ms);
@@ -41,11 +44,11 @@ public class TKMapperGlobalConfigFactory implements GlobalConfigFactory {
         TKMapperConfig internalTKMapperConfig = globalConfig.getTkMapperConfig();
 
         // 全局的catalog 和 schema
-        internalTKMapperConfig.setCatalog(externalMapperConfig.getCatalog());
-        internalTKMapperConfig.setSchema(externalMapperConfig.getSchema());
+        internalTKMapperConfig.setCatalog(mapperConfig.getCatalog());
+        internalTKMapperConfig.setSchema(mapperConfig.getSchema());
 
         // style
-        internalTKMapperConfig.setStyle(Utils.transform(externalMapperConfig.getStyle()));
+        internalTKMapperConfig.setStyle(Utils.transform(mapperConfig.getStyle()));
 
         TKMapperConfig internalMapperConfig = globalConfig.getTkMapperConfig();
 
@@ -53,12 +56,17 @@ public class TKMapperGlobalConfigFactory implements GlobalConfigFactory {
         boolean usePrimitiveType = SimpleTypeUtil.isSimpleType(boolean.class);
         internalMapperConfig.setUsePrimitiveType(usePrimitiveType);
 
-        internalMapperConfig.setEnumAsSimpleType(externalMapperConfig.isEnumAsSimpleType());
-
+        internalMapperConfig.setEnumAsSimpleType(mapperConfig.isEnumAsSimpleType());
     }
 
     @Override
     public GlobalConfig getGlobalConfig() {
         return this.globalConfig;
+    }
+
+    @Override
+    public void refresh() {
+        globalConfig = new GlobalConfig();
+        init();
     }
 }

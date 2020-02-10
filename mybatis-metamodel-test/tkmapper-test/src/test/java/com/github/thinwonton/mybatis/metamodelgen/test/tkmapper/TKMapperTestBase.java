@@ -6,16 +6,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Before;
-import tk.mybatis.mapper.common.IdsMapper;
-import tk.mybatis.mapper.common.Mapper;
-import tk.mybatis.mapper.common.MySqlMapper;
-import tk.mybatis.mapper.common.SqlServerMapper;
 import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URL;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
