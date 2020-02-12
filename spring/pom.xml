@@ -14,5 +14,6 @@
 
     <modules>
         <module>tkmapper-spring</module>
+        <module>mybatisplus-spring</module>
     </modules>
 </project>

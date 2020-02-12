@@ -9,7 +9,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>tkmapper-springboot-test</artifactId>
+    <artifactId>mybatisplus-spring-test</artifactId>
     <packaging>jar</packaging>
 
     <properties>
@@ -18,19 +18,20 @@
     <dependencies>
         <dependency>
             <groupId>com.github.thinwonton.mybatismetamodel</groupId>
-            <artifactId>tkmapper-spring</artifactId>
+            <artifactId>mybatisplus-spring</artifactId>
             <version>${project.version}</version>
         </dependency>
 
+        <!-- Mybatis-Plus -->
         <dependency>
-            <groupId>tk.mybatis</groupId>
-            <artifactId>mapper-spring-boot-starter</artifactId>
-            <version>${mapper-spring-boot.version}</version>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -38,21 +39,17 @@
             <artifactId>mybatis-spring</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
         </dependency>
 
         <dependency>
@@ -62,8 +59,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -93,38 +90,8 @@
 
     </dependencies>
 
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${springboot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springboot.version}</version>
-                <configuration>
-                    <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
-                    <fork>true</fork>
-                </configuration>
-                <!--如果使用bom方式引入spring-boot，需要添加，否则打包后的jar会缺少清单文件-->
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
             <plugin>
                 <groupId>org.bsc.maven</groupId>
@@ -133,12 +100,11 @@
                 <configuration>
                     <processors>
                         <processor>
-                            com.github.thinwonton.mybatis.metamodel.tkmapper.processor.gen.TKMapperMetaModelGenProcessor
+                            com.github.thinwonton.mybatis.metamodel.mybatisplus.processor.gen.MybatisPlusMetaModelGenProcessor
                         </processor>
                     </processors>
                     <options>
                         <debug>true</debug>
-                        <usePrimitiveType>false</usePrimitiveType>
                     </options>
                 </configuration>
                 <executions>
@@ -168,7 +134,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>

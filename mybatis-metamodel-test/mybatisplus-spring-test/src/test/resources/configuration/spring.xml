@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+       					http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd"
+       default-lazy-init="false">
+
+    <bean id="dataSource" class="org.h2.jdbcx.JdbcDataSource">
+        <property name="url" value="jdbc:h2:mem:test;MODE=mysql;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE"/>
+        <property name="user" value="sa"/>
+    </bean>
+
+    <jdbc:initialize-database>
+        <jdbc:script location="configuration/db.sql"/>
+    </jdbc:initialize-database>
+
+    <bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--<property name="mapperLocations" value="classpath:mapper/*.xml"/>-->
+        <property name="plugins">
+            <array>
+                <!-- 分页插件配置 -->
+                <bean id="paginationInterceptor"
+                      class="com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor"/>
+            </array>
+        </property>
+        <property name="configuration" ref="mybatisConfiguration"/>
+        <property name="globalConfig" ref="globalConfig"/>
+    </bean>
+
+    <!-- MyBatis 动态扫描  -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="basePackage" value="com.github.thinwonton.mybatis.metamodelgen.test.mybatisplus.spring.mapper"/>
+    </bean>
+
+
+    <bean id="dbConfig" class="com.baomidou.mybatisplus.core.config.GlobalConfig$DbConfig">
+        <property name="tableUnderline" value="true"/>
+    </bean>
+
+    <bean id="globalConfig" class="com.baomidou.mybatisplus.core.config.GlobalConfig">
+        <property name="dbConfig" ref="dbConfig"/>
+        <property name="banner" value="false"/>
+    </bean>
+
+    <bean id="mybatisConfiguration" class="com.baomidou.mybatisplus.core.MybatisConfiguration">
+        <!-- 全局配置注入 -->
+        <property name="globalConfig" ref="globalConfig"/>
+    </bean>
+
+    <!--这种方式，通过 mybatis-config.xml 配置mybatis不起效-->
+    <bean class="com.github.thinwonton.mybatis.metamodel.mybatisplus.spring.MetaModelContextFactoryBean">
+        <constructor-arg name="mybatisConfiguration" ref="mybatisConfiguration"/>
+    </bean>
+
+</beans>
