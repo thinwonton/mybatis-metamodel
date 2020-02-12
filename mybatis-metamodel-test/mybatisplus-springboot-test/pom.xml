@@ -9,7 +9,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>tkmapper-springboot-test</artifactId>
+    <artifactId>mybatisplus-springboot-test</artifactId>
     <packaging>jar</packaging>
 
     <properties>
@@ -18,19 +18,28 @@
     <dependencies>
         <dependency>
             <groupId>com.github.thinwonton.mybatismetamodel</groupId>
-            <artifactId>tkmapper-spring</artifactId>
+            <artifactId>mybatisplus-spring</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>tk.mybatis</groupId>
-            <artifactId>mapper-spring-boot-starter</artifactId>
-            <version>${mapper-spring-boot.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -39,12 +48,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
 
         <dependency>
@@ -53,53 +58,11 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito2</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
-
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${springboot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -125,12 +88,11 @@
                 <configuration>
                     <processors>
                         <processor>
-                            com.github.thinwonton.mybatis.metamodel.tkmapper.processor.gen.TKMapperMetaModelGenProcessor
+                            com.github.thinwonton.mybatis.metamodel.mybatisplus.processor.gen.MybatisPlusMetaModelGenProcessor
                         </processor>
                     </processors>
                     <options>
                         <debug>true</debug>
-                        <usePrimitiveType>false</usePrimitiveType>
                     </options>
                 </configuration>
                 <executions>
@@ -160,7 +122,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>

@@ -12,6 +12,22 @@
     <artifactId>mybatis-metamodel-test</artifactId>
     <packaging>pom</packaging>
 
+    <properties>
+        <springboot.version>2.1.9.RELEASE</springboot.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <modules>
         <module>tkmapper-test</module>
         <module>tkmapper-spring-test</module>
@@ -19,5 +35,6 @@
 
         <module>mybatisplus-test</module>
         <module>mybatisplus-spring-test</module>
+        <module>mybatisplus-springboot-test</module>
     </modules>
 </project>
