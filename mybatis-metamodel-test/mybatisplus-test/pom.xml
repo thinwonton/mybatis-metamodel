@@ -9,7 +9,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>mybatis-plus-test</artifactId>
+    <artifactId>mybatisplus-test</artifactId>
     <packaging>jar</packaging>
 
     <properties>

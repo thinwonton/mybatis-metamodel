@@ -14,7 +14,7 @@
 
     <modules>
         <module>tkmapper-test</module>
-        <module>mybatis-plus-test</module>
+        <module>mybatisplus-test</module>
         <module>tkmapper-spring-test</module>
         <module>tkmapper-springboot-test</module>
     </modules>
