@@ -26,4 +26,11 @@ public class ReflectionUtils {
         return (T) propertyField.get(object);
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> T getProperty(Class<?> clazz, String propertyName) throws NoSuchFieldException, IllegalAccessException {
+        Field propertyField = clazz.getDeclaredField(propertyName); //获取属性study1中的属性a
+        propertyField.setAccessible(true);//设置a属性的访问权限，保证private属性的访问
+        return (T) propertyField.get(clazz);
+    }
+
 }
