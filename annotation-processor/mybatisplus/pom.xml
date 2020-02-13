@@ -25,7 +25,7 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-core</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>
