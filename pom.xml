@@ -6,14 +6,14 @@
     <groupId>com.github.thinwonton.mybatismetamodel</groupId>
     <artifactId>mybatis-metamodel</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.0</version>
+    <version>1.0.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
 
-        <project.version>0.1.0</project.version>
+        <project.version>1.0.0</project.version>
 
         <!--mybatis-->
         <mybatis.version>3.5.3</mybatis.version>

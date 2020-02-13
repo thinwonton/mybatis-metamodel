@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.thinwonton.mybatismetamodel</groupId>
         <artifactId>mybatis-metamodel</artifactId>
-        <version>0.1.0</version>
+        <version>1.0.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
