@@ -80,6 +80,11 @@ public class TKMapperSampleTest extends TKMapperTestBase {
         UserInfo userInfoByQuery = userInfosByQuery.get(0);
         Assert.assertEquals(queryUserName, userInfoByQuery.getUsername());
 
+        MetaModelContext metaModelContext = MetaModelContextHolder.getInstance();
+        //获取table名
+        String tableName = metaModelContext.getTableName(UserInfo_.class);
+        Assert.assertEquals("user_info", tableName);
+
         //@SelectProvider注解方式查询
         List<UserInfo> userList2 = userInfoMapper.selectUsernameAndPassword();
         Assert.assertNotNull(userList2);

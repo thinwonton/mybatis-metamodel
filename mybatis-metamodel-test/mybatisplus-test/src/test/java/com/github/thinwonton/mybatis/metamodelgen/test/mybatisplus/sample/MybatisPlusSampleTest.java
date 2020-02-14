@@ -73,17 +73,23 @@ public class MybatisPlusSampleTest extends MybatisPlusTestBase {
         }
 
         // 根据 map 查询
+        // 查询username为hugo_1的数据
         Map<String, Object> map = new HashMap<>();
         map.put(UserInfo_.username.getColumn(), "hugo_1"); //获取元数据
         userInfo = userInfoMapper.selectByMap(map).get(0);
         Assert.assertEquals(Long.valueOf(1), userInfo.getId());
 
         // wrapper查询
-        // 查询列表
+        // 查询address为中国的列表
         List<UserInfo> userList = userInfoMapper.selectList(
                 new QueryWrapper<UserInfo>().eq(UserInfo_.address.getColumn(), "中国")
         );
         Assert.assertEquals(10, userList.size());
+
+        MetaModelContext metaModelContext = MetaModelContextHolder.getInstance();
+        //获取table名
+        String tableName = metaModelContext.getTableName(UserInfo_.class);
+        Assert.assertEquals("user_info", tableName);
 
         //@SelectProvider注解方式查询
         List<UserInfo> userList2 = userInfoMapper.selectUsernameAndPassword();
