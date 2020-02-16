@@ -96,8 +96,8 @@ String tableName = metaModelContext.getTableName(UserInfo_.class);
 
 ## 使用说明
 参考下面的wiki
-- [gitee](doc/guide/index.md)
-- [github](doc/guide/index.md)
+- [gitee](https://gitee.com/thinwonton/mybatis-metamodel/blob/develop/doc/guide/index.md)
+- [github](https://github.com/thinwonton/mybatis-metamodel/blob/develop/doc/guide/index.md)
 
 
 ## 鸣谢
