@@ -19,8 +19,8 @@
         <dependency>
             <groupId>com.github.thinwonton.mybatismetamodel</groupId>
             <artifactId>mybatisplus</artifactId>
-            <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-core</artifactId>

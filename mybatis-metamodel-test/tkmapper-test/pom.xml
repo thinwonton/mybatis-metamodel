@@ -19,7 +19,6 @@
         <dependency>
             <groupId>com.github.thinwonton.mybatismetamodel</groupId>
             <artifactId>tkmapper</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>

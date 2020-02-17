@@ -1,4 +1,5 @@
 # mybatis-metamodel
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.thinwonton/mybatis-metamodel/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.thinwonton/mybatis-metamodel)
 
 ## 介绍
 mybatis-metamodel 是 mybatis-plus 和 tk mapper 的元数据模型生成插件，目的是解决它们在复杂场景下自定义SQL时的紧耦合问题
@@ -56,7 +57,7 @@ String tableName = metaModelContext.getTableName(UserInfo_.class);
 
 ## 支持特性
 
-#### mapper
+### mapper
 支持MAPPER版本1.1.5+
 1. 支持是否使用原语类型配置usePrimitiveType，默认为false，建议不要开启，没有意义
 2. 支持配置useSimpleType，默认为true
@@ -68,7 +69,7 @@ String tableName = metaModelContext.getTableName(UserInfo_.class);
 8. 支持@Transient、@Column、@ColumnType注解
 9. 支持忽略static/transient修饰词的字段
 
-#### mybatis-plus
+### mybatis-plus
 支持mybatis-plus版本3.2.0+
 1. 支持全局配置tableUnderline、capitalMode
 2. 支持忽略static/transient修饰词的字段
@@ -78,15 +79,15 @@ String tableName = metaModelContext.getTableName(UserInfo_.class);
 
 ## 不支持特性
 
-#### mapper
+### mapper
 1. 不支持动态表名 IDynamicTableName
 2. 不支持方法上使用注解, 即 enableMethodAnnotation 全局配置
 
 ## TODO    
 
-#### mapper   
+### mapper   
 
-#### mybatis-plus   
+### mybatis-plus   
 1. 支持配置keepGlobalFormat
 2. 支持配置tablePrefix
 3. 支持配置columnFormat

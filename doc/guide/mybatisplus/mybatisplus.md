@@ -122,7 +122,6 @@ Assert.assertEquals("user_info", tableName);
 <dependency>
     <groupId>com.github.thinwonton.mybatismetamodel</groupId>
     <artifactId>mybatisplus-spring</artifactId>
-    <version>${version}</version>
 </dependency>
 
 ```

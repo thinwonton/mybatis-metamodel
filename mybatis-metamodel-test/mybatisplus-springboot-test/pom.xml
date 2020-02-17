@@ -19,7 +19,6 @@
         <dependency>
             <groupId>com.github.thinwonton.mybatismetamodel</groupId>
             <artifactId>mybatisplus-spring</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
